@@ -16,31 +16,76 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+function Open60App() {
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
+    function constructor() {
+		
+		var btData = {
+			devices : []
+		};
+		
+		var btComponent = {
+			template: '\
+				<div>\
+				<button :click="refresh()">refresh</button>\
+				<ul>\
+				<li v-for="d in devices">{{ d.name }}</li>\
+				</ul>\
+				</div>\
+				',
+			data: function() {
+				return btData;
+				},
+			methods: {
+				refresh: function() {
+					if (typeof bluetoothSerial !== "undefined") {
+						function success(devices) {
+							btData.devices = devices.slice(0);
+						}
+						function failure(msg) {
+							console.log("bluetooth list error: " + msg);
+						}
+						bluetoothSerial.list(success, failure);
+					} else {
+						btData.devices = [
+							{
+							name: "device1"
+							},
+							{
+							name: "device2"
+							},
+							{
+							name: "device3"
+							}
+						];
+					}
+				}
+			}
+		};
+		
+    	var app = new Vue({
+  			el: '#app',
+  			data: {
+    			message: 'Hello Vue!'
+  			},
+  			components: {
+  				'bluetooth-component': btComponent
+  			}
+		});
+		
+    };
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+	constructor();
+}
 
-        console.log('Received Event: ' + id);
-    }
-};
 
-app.initialize();
+function onDeviceReady() {
+	var openApp = new Open60App();
+}
+
+if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+  document.addEventListener("deviceready", onDeviceReady, false);
+} else {
+  onDeviceReady(); //this is the browser
+}
