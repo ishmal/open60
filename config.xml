@@ -24,4 +24,7 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <plugin name="cordova-plugin-bluetooth-serial" spec="~0.4.6" />
+    <preference name="Orientation" value="landscape" />
+    <preference name="Fullscreen" value="true" />
+    <plugin name="cordova-plugin-toaster" spec="~0.0.1" />
 </widget>
