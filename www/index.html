@@ -34,15 +34,16 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <title>Open60</title>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/vue.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
     </head>
    <body>
         <div id="app">
             <h1>Open60</h1>
+            <status-component></status-component>
             <bluetooth-component></bluetooth-component>
 		</div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/vue.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
         <canvas id="chart" width="1024" height="800"></canvas>
     </body>
 </html>

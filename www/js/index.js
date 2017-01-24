@@ -16,10 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ 
+
 function Open60App() {
 
-    function constructor() {
+    this.constructor = function() {
+    
+    	this.ready = false;
 		
+		var statData = {
+			ready: false
+		};
+		
+		var statusComponent = {
+			template: '\
+			<p>Ready: {{ ready }} </p>\
+			',
+			data: function() {
+				return statData;
+			}
+		};
+
+		Vue.component('status-component', statusComponent);
+		
+		this.setReady = function(v) {
+			statData.ready = v;
+		}
+
 		var btData = {
 			devices : []
 		};
@@ -27,9 +50,9 @@ function Open60App() {
 		var btComponent = {
 			template: '\
 				<div>\
-				<button :click="refresh()">refresh</button>\
+				<button v-on:click="refresh()">refresh</button>\
 				<ul>\
-				<li v-for="d in devices">{{ d.name }}</li>\
+				<li v-for="d in devices"><button v-on:click="connect(d)">{{ d.name }}</button></li>\
 				</ul>\
 				</div>\
 				',
@@ -59,29 +82,32 @@ function Open60App() {
 							}
 						];
 					}
+				},
+				connect: function() {
 				}
 			}
 		};
 		
-    	var app = new Vue({
-  			el: '#app',
-  			data: {
-    			message: 'Hello Vue!'
-  			},
-  			components: {
-  				'bluetooth-component': btComponent
-  			}
-		});
+		Vue.component('bluetooth-component', btComponent);
 		
     };
 
 
-	constructor();
+	this.constructor();
 }
 
+var open60app = new Open60App();
+
+document.addEventListener("DOMContentLoaded", function() {
+	var app = new Vue({
+		el: '#app',
+		data: {
+		}
+	});
+});
 
 function onDeviceReady() {
-	var openApp = new Open60App();
+		open60app.setReady(true);
 }
 
 if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
