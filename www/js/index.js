@@ -156,12 +156,12 @@ function Open60App() {
 				set: function(v) { this._start = v; if (this.graph) this.graph.start = v; }
 			 },
 			"end": { 
-				get: function () { return this._ready; },
-				set: function(v) { this._ready = v;  if (this.graph) this.graph.end = v; }
+				get: function () { return this._end; },
+				set: function(v) { this._end = v;  if (this.graph) this.graph.end = v; }
 			},
 			"step": { 
-				get: function () { return this._ready; },
-				set: function(v) { this._ready = v;  if (this.graph) this.graph.step = v; }
+				get: function () { return this._step; },
+				set: function(v) { this._step = v;  if (this.graph) this.graph.step = v; }
 			 },
 		});
 
@@ -256,6 +256,9 @@ function Open60App() {
 			<span>{{ connected }} </span>\
 			<button v-on:click="connect()">connect</button>\
 			<button v-on:click="disconnect()">disconnect</button>\
+			<span>start</span><input v-model="start">\
+			<span>end</span><input v-model="end">\
+			<span>step</span><input v-model="step">\
 			<button v-on:click="scan()">scan</button>\
 			</div>\
 			',
