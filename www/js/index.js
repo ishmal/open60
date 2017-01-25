@@ -22,6 +22,7 @@ function Graph() {
 	var that = this;
 	this.canvas = document.getElementById('graph');
 	this.ctx = this.canvas.getContext("2d");
+	this.data = [];
 
 	this.redraw = function() {
 		var ctx = this.ctx;
@@ -106,7 +107,7 @@ function Graph() {
 		 */
 		 var datapoints = this.data;
 		 var p;
-		 this.len = datapoints.length;
+		 var len = datapoints.length;
 		 var nrSteps = (this.end - this.start) / this.step;
 		 var xd = (right - left) / nrSteps;
 		 ctx.beginPath();
