@@ -241,6 +241,13 @@ function Open60App() {
 		console.log(msg);
 	}
 
+	function alert(msg) {
+		if (navigator.showToast) {
+			navigator.showToast(msg);
+		}
+		console.log("alert: " + msg);
+	}
+
 	function error(msg) {
 		console.log("error: " + msg);
 		if (navigator.showToast) {
@@ -326,7 +333,7 @@ function Open60App() {
 		}
 
 		function success() {
-
+			trace("sent!");
 		}
 
 		function failure(msg) {
@@ -363,7 +370,7 @@ function Open60App() {
 
 	var toolbarComponent = {
 		template: '<div class="toolbar">' +
-			'<button class="cmd-button" v-on:click="toggleConnect()">{{ connected ? "disconnect" : "connect" }}</button>' +
+			'<button id="cmd-button" class="cmd-button" v-on:click="toggleConnect()">connect</button>' +
 			'<span class="number-input">start<input v-model="start"></span>' +
 			'<span class="number-input">end<input v-model="end"></span>' +
 			'<span class="number-input">step<input v-model="step"></span>' +
