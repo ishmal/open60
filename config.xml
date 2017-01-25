@@ -27,4 +27,5 @@
     <preference name="Orientation" value="landscape" />
     <preference name="Fullscreen" value="true" />
     <plugin name="cordova-plugin-toaster" spec="~0.0.1" />
+    <engine name="android" spec="~6.1.1" />
 </widget>
