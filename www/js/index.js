@@ -199,6 +199,11 @@ function Open60App() {
 				return this._connected;
 			},
 			set: function(v) {
+				var b = document.getElementById("cmd-button");
+				if (b) {
+					var msg = v ? "disconnect" : "connect";
+					b.textContent = msg;
+				}
 				this._connected = v;
 			}
 		},
