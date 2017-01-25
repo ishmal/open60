@@ -17,7 +17,7 @@
  * under the License.
  */
 
-function Graph() {
+function Graph(par) {
 
 	var that = this;
 	this.canvas = document.getElementById('graph');
@@ -105,56 +105,46 @@ function Graph() {
 		/**
 		 * Draw swr
 		 */
-		 var datapoints = this.data;
-		 var p;
-		 var len = datapoints.length;
-		 var nrSteps = (this.end - this.start) / this.step;
-		 var xd = (right - left) / nrSteps;
-		 ctx.beginPath();
-		 x = left;
-		 for (i = 0 ; i < len ; i++) {
-			 dp = datapoints[i];
-			 y = bottom - (bottom - top) * (dp.swr - 1) / 6.0
-			 ctx.moveTo(x, y);
-			 x += xd;
-		 }
-		 ctx.stroke();
-
+		var datapoints = this.data;
+		var p;
+		var len = datapoints.length;
+		var nrSteps = (this.end - this.start) / this.step;
+		var xd = (right - left) / nrSteps;
+		ctx.beginPath();
+		x = left;
+		ctx.strokeStyle = "red";
+		for (i = 0; i < len; i++) {
+			dp = datapoints[i];
+			y = bottom - (bottom - top) * (dp.swr - 1) / 6.0;
+			if (i === 0) {
+				ctx.moveTo(x, y);
+			} else {
+				ctx.lineTo(x, y);
+			}
+			x += xd;
+		}
+		ctx.lineTo(x, y);
+		ctx.stroke();
 	};
 
 	Object.defineProperties(this, {
 		"start": {
 			get: function() {
-				return this._start;
-			},
-			set: function(v) {
-				this._start = v;
-				this.redraw();
+				return par.start;
 			}
 		},
 		"end": {
 			get: function() {
-				return this._end;
-			},
-			set: function(v) {
-				this._end = v;
-				this.redraw();
+				return par.end;
 			}
 		},
 		"step": {
 			get: function() {
-				return this._step;
-			},
-			set: function(v) {
-				this._step = v;
-				this.redraw();
+				return par.step;
 			}
 		},
 	});
 
-	this.start = 13900;
-	this.end = 14500;
-	this.step = 5;
 	this.data = [];
 
 	this.startScan = function() {
@@ -214,7 +204,6 @@ function Open60App() {
 			},
 			set: function(v) {
 				this._start = v;
-				if (this.graph) this.graph.start = v;
 			}
 		},
 		"end": {
@@ -223,7 +212,6 @@ function Open60App() {
 			},
 			set: function(v) {
 				this._end = v;
-				if (this.graph) this.graph.end = v;
 			}
 		},
 		"step": {
@@ -232,7 +220,6 @@ function Open60App() {
 			},
 			set: function(v) {
 				this._step = v;
-				if (this.graph) this.graph.step = v;
 			}
 		},
 	});
@@ -262,7 +249,7 @@ function Open60App() {
 	}
 
 	this.addGraph = function() {
-		this.graph = new Graph(this.start, this.end, this.step);
+		this.graph = new Graph(this);
 	};
 
 	this.checkConnect = function() {

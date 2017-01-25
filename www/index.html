@@ -32,8 +32,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
-    
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, width=1024">
     <link rel="stylesheet" type="text/css" href="css/index.css">
     <title>Open60</title>
     <script type="text/javascript" src="cordova.js"></script>
@@ -42,11 +42,11 @@
 </head>
 
 <body>
-    <div class="content">
+    <div id="content" class="content">
+      <canvas class="graph" id="graph" width="640" height="480"></canvas>
       <div id="app" class="app">
         <toolbar-component></toolbar-component>
       </div>
-      <canvas class="graph" id="graph" width="800" height="640"></canvas>
     </div>
 </body>
 
