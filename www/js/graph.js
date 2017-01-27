@@ -6,6 +6,7 @@ org.open60.Graph = function(par) {
 	var that = this;
 	this.canvas = document.getElementById('graph');
 	this.ctx = this.canvas.getContext("2d");
+	this.scanning = false;
 	this.data = [];
 
 	this.redraw = function() {
@@ -16,6 +17,12 @@ org.open60.Graph = function(par) {
 		var start = range.start;
 		var end = range.end;
 		var step = range.step;
+		var datapoints = this.data;
+		var dp;
+		var datalen = datapoints.length;
+		var nrSteps = (end - start) / step;
+		var progress = datalen / nrSteps;
+
 		ctx.fillStyle = "black";
 		ctx.fillRect(0, 0, w, h);
 		var top = 10;
@@ -25,11 +32,41 @@ org.open60.Graph = function(par) {
 		ctx.font = 'bold 12pt Courier';
 
 		/**
+		 * Connection
+		 */
+		var arcEnd;
+		var xc = 47;
+		var yc = 20;
+		var rad = 6;
+		if (par.connected) {
+			if (this.scanning) {
+				ctx.strokeStyle = "blue";
+				arcEnd = progress * 2.0 * Math.PI;
+				ctx.beginPath();
+				ctx.arc(xc, yc, rad, 0, arcEnd, false);
+				ctx.stroke();
+			} else {
+				ctx.fillStyle = "green";
+				arcEnd = 2.0 * Math.PI;
+				ctx.beginPath();
+				ctx.arc(xc, yc, rad, 0, arcEnd, false);
+				ctx.fill();
+			}
+		} else {
+			ctx.fillStyle = "red";
+			arcEnd = 2.0 * Math.PI;
+			ctx.beginPath();
+			ctx.arc(xc, yc, rad, 0, arcEnd, false);
+			ctx.fill();
+		}
+
+		/**
 		 * Draw columns
 		 */
 		var nrCol = 20;
 		var diff = (right - left) / nrCol;
-		ctx.strokeStyle = "yellow";
+		ctx.strokeStyle = "gray";
+		ctx.lineWidth = 1;
 		var x = left;
 		var i;
 		for (i = 0; i <= nrCol; i++) {
@@ -80,7 +117,7 @@ org.open60.Graph = function(par) {
 		for (i = 0; i <= nrRow; i++) {
 			ctx.fillStyle = "red";
 			ctx.fillText(swr.toFixed(1), 2, y);
-			ctx.fillStyle = "green";
+			ctx.fillStyle = "#44ff44";
 			ctx.fillText(r.toFixed(0), right + 2, y);
 			y -= diff;
 			swr += swrDiff;
@@ -90,17 +127,34 @@ org.open60.Graph = function(par) {
 		/**
 		 * Draw swr
 		 */
-		var datapoints = this.data;
-		var p;
-		var len = datapoints.length;
-		var nrSteps = (this.end - this.start) / this.step;
 		var xd = (right - left) / nrSteps;
+		ctx.lineWidth = 4;
 		ctx.beginPath();
 		x = left;
 		ctx.strokeStyle = "red";
-		for (i = 0; i < len; i++) {
+		for (i = 0; i < datalen; i++) {
 			dp = datapoints[i];
 			y = bottom - (bottom - top) * (dp.swr - 1) / 6.0;
+			if (i === 0) {
+				ctx.moveTo(x, y);
+			} else {
+				ctx.lineTo(x, y);
+			}
+			x += xd;
+		}
+		ctx.lineTo(x, y);
+		ctx.stroke();
+
+
+		/**
+		 * Draw R
+		 */
+		ctx.beginPath();
+		x = left;
+		ctx.strokeStyle = "green";
+		for (i = 0; i < datalen; i++) {
+			dp = datapoints[i];
+			y = bottom - (bottom - top) * (dp.r) / 300.0;
 			if (i === 0) {
 				ctx.moveTo(x, y);
 			} else {
@@ -116,10 +170,12 @@ org.open60.Graph = function(par) {
 
 	this.startScan = function() {
 		this.data = [];
+		this.scanning = true;
 		this.redraw();
 	};
 
 	this.endScan = function() {
+		this.scanning = false;
 		this.redraw();
 	};
 
@@ -134,15 +190,25 @@ org.open60.Graph = function(par) {
 
 	setTimeout(function() {
 		that.redraw();
-	}, 2000);
+	}, 500);
 
+	var clicked = false;
 	this.canvas.addEventListener('click', function() {
-		par.next();
-		this.redraw();
-	});
-
-	this.canvas.addEventListener('dblclick', function() {
-		par.scan();
+		if (!clicked) {
+			clicked = true;
+			setTimeout(function() {
+				if (clicked) {
+					//single
+					par.next();
+					that.redraw();
+				}
+				clicked = false;
+			}, 300);
+		} else {
+			//double
+			clicked = false;
+			par.checkConnectAndScan();
+		}
 	});
 
 };

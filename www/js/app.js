@@ -64,7 +64,7 @@ org.open60.App = function() {
 		}
 	}
 
-	function next() {
+	this.next = function() {
 		var len = this.config.ranges.length;
 		this.rangeIndex = (this.rangeIndex + 1) % len;
 		this.range = this.config.ranges[this.rangeIndex];
@@ -81,7 +81,7 @@ org.open60.App = function() {
 		bluetoothSerial.isConnected(success, failure);
 	};
 
-	this.connect = function(device) {
+	this.connect = function(device, cb) {
 		function receive(data) {
 			that.receive(data);
 		}
@@ -93,7 +93,9 @@ org.open60.App = function() {
 		function connectSuccess() {
 			that.connected = true;
 			bluetoothSerial.subscribe('\n', receive, subscribeFailure);
-			//bluetoothSerial.subscribeRawData(receive, subscribeFailure);
+			if (cb) {
+				cb();
+			}
 		}
 
 		function connectFailure(msg) {
@@ -118,7 +120,7 @@ org.open60.App = function() {
 	};
 
 	this.receive = function(data) {
-		console.log(data);
+		// console.log(data);
 		data = data.trim();
 		if (data.startsWith('Start')) {
 			this.graph.startScan();
@@ -153,16 +155,17 @@ org.open60.App = function() {
 		bluetoothSerial.write(msg + '\r\n', success, failure);
 	};
 
-	this.findMini60AndConnect = function() {
+	this.findDeviceAndConnect = function(cb) {
+		var deviceName = this.config.deviceName;
 		function success(devices) {
 			var dev = devices.find(function(d) {
 				var name = d.name;
-				return name.startsWith(this.config.deviceName);
+				return name.startsWith(deviceName);
 			});
 			if (!dev) {
 				error("Paired device 'MINI60' not found");
 			}
-			that.connect(dev);
+			that.connect(dev, cb);
 		}
 
 		function failure(msg) {
@@ -172,11 +175,41 @@ org.open60.App = function() {
 	};
 
 	this.scan = function() {
-    var ranges = this.config.ranges;
-		var start = this.start * 1000;
-		var end = this.end * 1000;
-		var step = this.step * 1000;
-		var cmd = "scan " + start + " " + end + " " + step;
-		this.send(cmd);
+			var r = this.range;
+			var start = r.start * 1000;
+			var end = r.end * 1000;
+			var step = r.step * 1000;
+			var cmd = "scan " + start + " " + end + " " + step;
+			this.send(cmd);
 	};
+
+	this.checkConnectAndScan = function() {
+		if (this.connected) {
+			this.scan();
+		} else {
+			this.findDeviceAndConnect(function() {
+				that.scan();
+			});
+		}
+	};
+
+	this.startHeartbeat = function() {
+		this.timer = setInterval(function() {
+			function success() {
+				that.connected = true;
+			}
+			function failure() {
+				that.connected = false;
+			}
+			if (typeof bluetoothSerial !== 'undefined') {
+				bluetoothSerial.isConnected(success, failure);
+			} else {
+				that.connected = false;
+			}
+			that.graph.redraw();
+		}, 3000);
+	};
+
+	this.startHeartbeat();
+
 };
