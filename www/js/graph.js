@@ -14,6 +14,7 @@ org.open60.Graph = function(par) {
 		var w = this.canvas.width;
 		var h = this.canvas.height;
 		var range = par.range;
+		var name = range.name;
 		var start = range.start;
 		var end = range.end;
 		var step = range.step;
@@ -164,6 +165,13 @@ org.open60.Graph = function(par) {
 		}
 		ctx.lineTo(x, y);
 		ctx.stroke();
+
+		/**
+		 * Name
+		 */
+		ctx.fillStyle = "white";
+		ctx.fillText(name, 60, 27);
+
 	};
 
 	this.data = [];
