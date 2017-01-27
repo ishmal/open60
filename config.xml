@@ -25,6 +25,7 @@
     </platform>
     <plugin name="cordova-plugin-bluetooth-serial" spec="~0.4.6" />
     <preference name="Orientation" value="landscape" />
+    <preference name="EnableViewportScale" value="true" />
     <plugin name="cordova-plugin-toaster" spec="~0.0.1" />
     <engine name="android" spec="~6.1.1" />
 </widget>
