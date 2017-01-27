@@ -1,6 +1,3 @@
-
-
-
 /**
  * This is the main canvas
  */
@@ -15,7 +12,7 @@ org.open60.Graph = function(par) {
 		var ctx = this.ctx;
 		var w = this.canvas.width;
 		var h = this.canvas.height;
-    var range = par.range;
+		var range = par.range;
 		var start = range.start;
 		var end = range.end;
 		var step = range.step;
@@ -139,13 +136,13 @@ org.open60.Graph = function(par) {
 		that.redraw();
 	}, 2000);
 
-  this.canvas.addEventListener('click', function() {
-    par.next();
-    this.redraw();
-  });
+	this.canvas.addEventListener('click', function() {
+		par.next();
+		this.redraw();
+	});
 
-  this.canvas.addEventListener('dblclick', function() {
-    par.scan();
-  });
+	this.canvas.addEventListener('dblclick', function() {
+		par.scan();
+	});
 
 };

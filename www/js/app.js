@@ -43,7 +43,7 @@ org.open60.App = function() {
 	this.ready = false;
 	this.connected = false;
 	this.rangeIndex = 0;
-	this.range = this.config[0];
+	this.range = this.config.ranges[0];
   this.graph = new org.open60.Graph(this);
 
 	function trace(msg) {
