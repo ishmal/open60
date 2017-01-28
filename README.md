@@ -1,6 +1,8 @@
 # open60
 Bluetooth client for the Mini60 antenna analyzer
 
+![Alt text](misc/mini60.jpg?raw=true "MINI60")
+
 ### About
 
 Last week I received a Bluetooth-equipped Mini60 Antenna Analyzer from a Chinese eBay seller.  It is an assembled
