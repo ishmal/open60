@@ -23,3 +23,13 @@ by people frustrated with their Bluetooth connection not working.  Maybe this ca
 
 I will periodically upload a build here:  https://github.com/ishmal/open60/releases .
 
+### Observations about the Mini60
+
+The USB port will provide enough power for the CPU,  but seems not be be sufficient for the Bluetooth.  You will
+either need the 12v charger,  or let the batteries charge up overnight.
+
+The 12v power socket is 1.2mm .  I could not find this documented anywhere, but that's what it is.
+
+The USB socket is for a "mini b" connector, not the much more common "micro".
+
+
