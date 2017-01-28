@@ -78,7 +78,9 @@ org.open60.App = function() {
 		function failure() {
 			that.connected = false;
 		}
-		bluetoothSerial.isConnected(success, failure);
+		if (typeof bluetoothSerial !== "undefined") {
+			bluetoothSerial.isConnected(success, failure);
+		}
 	};
 
 	this.connect = function(device, cb) {
@@ -100,7 +102,7 @@ org.open60.App = function() {
 
 		function connectFailure(msg) {
 			that.connected = false;
-			error("connect: " + msg);
+			error("connecting to '" + device.name + "' : " + msg);
 		}
 		bluetoothSerial.connect(device.address, connectSuccess, connectFailure);
 	};
@@ -163,7 +165,7 @@ org.open60.App = function() {
 				return name.startsWith(deviceName);
 			});
 			if (!dev) {
-				error("Paired device 'MINI60' not found");
+				error("Paired device '" + deviceName + "' not found");
 			}
 			that.connect(dev, cb);
 		}
