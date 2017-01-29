@@ -56,7 +56,23 @@
 
 <body>
     <div id="app" class="content">
-      <canvas class="graph" id="graph" width="1024" height="768"></canvas>
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#config" role="tab">Config</a>
+        </li>
+      </ul>
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div class="tab-pane active" id="home" role="tabpanel">
+          <canvas class="graph" id="graph" width="1024" height="768"></canvas>
+        </div>
+        <div class="tab-pane" id="config" role="tabpanel">
+        </div>
+      </div>
     </div>
 </body>
 

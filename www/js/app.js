@@ -7,38 +7,6 @@ org.open60.App = function() {
 
 	var that = this;
 
-	Object.defineProperties(this, {
-		"ready": {
-			get: function() {
-				return this._ready;
-			},
-			set: function(v) {
-				this._ready = v;
-			}
-		},
-		"connected": {
-			get: function() {
-				return this._connected;
-			},
-			set: function(v) {
-				var b = document.getElementById("cmd-button");
-				if (b) {
-					var msg = v ? "disconnect" : "connect";
-					b.textContent = msg;
-				}
-				this._connected = v;
-			}
-		},
-		"range": {
-			get: function() {
-				return this._range;
-			},
-      set: function(v) {
-        this._range = v;
-      }
-		}
-	});
-
 	this.config = org.open60.config;
 	this.ready = false;
 	this.connected = false;
