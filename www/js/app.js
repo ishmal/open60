@@ -7,11 +7,10 @@ org.open60.App = function() {
 
 	var that = this;
 
-	this.config = org.open60.config;
 	this.ready = false;
 	this.connected = false;
 	this.rangeIndex = 0;
-	this.range = this.config.ranges[0];
+	this.range = org.open60.config.ranges[0];
   this.graph = new org.open60.Graph(this);
 
 	function trace(msg) {
@@ -33,9 +32,10 @@ org.open60.App = function() {
 	}
 
 	this.next = function() {
-		var len = this.config.ranges.length;
+		var ranges = org.open60.config.ranges;
+		var len = ranges.length;
 		this.rangeIndex = (this.rangeIndex + 1) % len;
-		this.range = this.config.ranges[this.rangeIndex];
+		this.range = ranges[this.rangeIndex];
 	}
 
 	this.checkConnect = function() {

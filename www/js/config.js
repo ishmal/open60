@@ -72,12 +72,52 @@ org.open60.defaultConfig = {
       start: 49800,
       end: 54200,
       step: 10
+    },
+    {
+      name: "wide",
+      start: 1500,
+      end: 30000,
+      step: 200
     }
   ]
 };
 
 // clone
-org.open60.config = window.localStorage.get("open60");
+org.open60.config = window.localStorage.getItem("open60");
 if (!org.open60.config) {
   org.open60.config = JSON.parse(JSON.stringify(org.open60.defaultConfig));
 }
+
+
+Vue.component('config-component', {
+  template: '\n' +
+    '<div class="config-pane">\n' +
+    '<button v-on:click="save()" >Save</button>\n' +
+    '<button v-on:click="restore()" >Restore defaults</button>\n' +
+    '<label>Bluetooth Device<input type="text" v-model="config.deviceName" /></label>\n' +
+    '<table cols="4">\n' +
+    '<thead><th>name</th><th>start</th><th>end</th><th>step</th></thead>\n' +
+    '<tbody>\n' +
+    '<tr v-for="r in config.ranges">\n' +
+    '<td><input v-model="r.name" /></td>\n' +
+    '<td><input v-model="r.start" /></td>\n' +
+    '<td><input v-model="r.end" /></td>\n' +
+    '<td><input v-model="r.step" /></td>\n' +
+    '</tr>\n' +
+    '</tbody>\n' +
+    '</table>\n' +
+    '</div>\n',
+  data: function() {
+    return {
+      config: org.open60.config
+    };
+  },
+  methods: {
+    save: function() {
+      window.localStorage.setItem("open60", org.open60.config);
+    },
+    restore: function() {
+      org.open60.config = JSON.parse(JSON.stringify(org.open60.defaultConfig));
+    }
+  }
+});

@@ -15,3 +15,7 @@ body {
   /**/
   background-color: black;
 }
+
+.config-pane {
+  background-color: white;
+}
