@@ -126,7 +126,7 @@ org.open60.App = function() {
 	};
 
 	this.findDeviceAndConnect = function(cb) {
-		var deviceName = this.config.deviceName;
+		var deviceName = org.open60.config.deviceName;
 		function success(devices) {
 			var dev = devices.find(function(d) {
 				var name = d.name;
