@@ -4,7 +4,7 @@
 /**
  * Cnfiguration file.  Modify at will!!  Enjoy
  */
-org.open60.config = {
+org.open60.defaultConfig = {
   deviceName : "MINI60",
   ranges : [
     {
@@ -75,3 +75,9 @@ org.open60.config = {
     }
   ]
 };
+
+// clone
+org.open60.config = window.localStorage.get("open60");
+if (!org.open60.config) {
+  org.open60.config = JSON.parse(JSON.stringify(org.open60.defaultConfig));
+}

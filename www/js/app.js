@@ -180,6 +180,10 @@ org.open60.App = function() {
 		}, 3000);
 	};
 
-	this.startHeartbeat();
+	this.setup = function() {
+		this.startHeartbeat();
+	}
+
+	this.setup();
 
 };
