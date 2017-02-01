@@ -6,7 +6,7 @@
  */
 org.open60.defaultConfig = {
   ns: "org.open60",
-  deviceName : "MINI60",
+  deviceName : "mini",
   ranges : [
     {
       name: "160m",
@@ -15,61 +15,61 @@ org.open60.defaultConfig = {
       step: 5
     },
     {
-      name: "80/75m",
+      name: "80/75 m",
       start: 3400,
       end: 4100,
       step: 10
     },
     {
-      name: "60m",
+      name: "60 m",
       start: 5250,
       end: 5450,
       step: 5
     },
     {
-      name: "40m",
+      name: "40 m",
       start: 6900,
       end: 7400,
       step: 5
     },
     {
-      name: "30m",
+      name: "30 m",
       start: 10050,
       end: 10300,
       step: 5
     },
     {
-      name: "20m",
+      name: "20 m",
       start: 13800,
       end: 14700,
       step: 5
     },
     {
-      name: "17m",
+      name: "17 m",
       start: 18000,
       end: 18250,
       step: 5
     },
     {
-      name: "15m",
+      name: "15 m",
       start: 20500,
       end: 22000,
       step: 5
     },
     {
-      name: "12m",
+      name: "12 m",
       start: 24700,
       end: 25100,
       step: 5
     },
     {
-      name: "10m",
+      name: "10 m",
       start: 27900,
       end: 30000,
       step: 10
     },
     {
-      name: "6m",
+      name: "6 m",
       start: 49800,
       end: 54200,
       step: 10

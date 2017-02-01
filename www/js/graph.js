@@ -30,36 +30,20 @@ org.open60.Graph = function(par) {
 		var bottom = h - 20;
 		var left = 35;
 		var right = w - 35;
+		var currentX = left + (right - left) * progress;
 		ctx.font = 'bold 12pt Courier';
 
 		/**
 		 * Connection
 		 */
-		var arcEnd;
+		var arcEnd = 2.0 * Math.PI;
 		var xc = 47;
 		var yc = 20;
 		var rad = 6;
-		if (par.connected) {
-			if (this.scanning) {
-				ctx.strokeStyle = "blue";
-				arcEnd = progress * 2.0 * Math.PI;
-				ctx.beginPath();
-				ctx.arc(xc, yc, rad, 0, arcEnd, false);
-				ctx.stroke();
-			} else {
-				ctx.fillStyle = "green";
-				arcEnd = 2.0 * Math.PI;
-				ctx.beginPath();
-				ctx.arc(xc, yc, rad, 0, arcEnd, false);
-				ctx.fill();
-			}
-		} else {
-			ctx.fillStyle = "red";
-			arcEnd = 2.0 * Math.PI;
-			ctx.beginPath();
-			ctx.arc(xc, yc, rad, 0, arcEnd, false);
-			ctx.fill();
-		}
+		ctx.fillStyle = par.connected ? (this.scanning ? "blue" : "green") : "red";
+		ctx.beginPath();
+		ctx.arc(xc, yc, rad, 0, arcEnd, false);
+		ctx.fill();
 
 		/**
 		 * Draw columns
@@ -124,6 +108,15 @@ org.open60.Graph = function(par) {
 			swr += swrDiff;
 			r += rDiff;
 		}
+
+		/**
+		 * Draw "cursor"
+		 */
+		ctx.strokeStyle = "cyan";
+		ctx.beginPath();
+		ctx.moveTo(currentX, top);
+		ctx.lineTo(currentX, bottom);
+		ctx.stroke();
 
 		/**
 		 * Draw swr

@@ -127,9 +127,10 @@ org.open60.App = function() {
 
 	this.findDeviceAndConnect = function(cb) {
 		var deviceName = org.open60.config.deviceName;
+		deviceName = deviceName.toLowerCase();
 		function success(devices) {
 			var dev = devices.find(function(d) {
-				var name = d.name;
+				var name = d.name.toLowerCase();
 				return name.startsWith(deviceName);
 			});
 			if (!dev) {
