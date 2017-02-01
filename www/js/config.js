@@ -5,6 +5,7 @@
  * Cnfiguration file.  Modify at will!!  Enjoy
  */
 org.open60.defaultConfig = {
+  ns: "org.open60",
   deviceName : "MINI60",
   ranges : [
     {
@@ -83,26 +84,28 @@ org.open60.defaultConfig = {
 };
 
 // clone
-org.open60.config = window.localStorage.getItem("open60");
-if (!org.open60.config) {
-  org.open60.config = JSON.parse(JSON.stringify(org.open60.defaultConfig));
+org.open60.config = JSON.parse(window.localStorage.getItem("open60") || "{}");
+if (!org.open60.config || org.open60.config.ns !== 'org.open60') {
+  var json = JSON.stringify(org.open60.defaultConfig);
+  window.localStorage.setItem("open60", json);
+  org.open60.config = JSON.parse(json);
 }
 
 
 Vue.component('config-component', {
   template: '\n' +
     '<div class="config-pane">\n' +
-    '<button v-on:click="save()" >Save</button>\n' +
-    '<button v-on:click="restore()" >Restore defaults</button>\n' +
+    '<button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>\n' +
+    '<button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>\n' +
     '<label>Bluetooth Device<input type="text" v-model="config.deviceName" /></label>\n' +
-    '<table cols="4">\n' +
-    '<thead><th>name</th><th>start</th><th>end</th><th>step</th></thead>\n' +
+    '<table class="table table-sm table-striped" cols="4">\n' +
+    '<thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>\n' +
     '<tbody>\n' +
     '<tr v-for="r in config.ranges">\n' +
-    '<td><input v-model="r.name" /></td>\n' +
-    '<td><input v-model="r.start" /></td>\n' +
-    '<td><input v-model="r.end" /></td>\n' +
-    '<td><input v-model="r.step" /></td>\n' +
+    '<td><input type="text" v-model="r.name" /></td>\n' +
+    '<td><input type="number" v-model="r.start" /></td>\n' +
+    '<td><input type="number" v-model="r.end" /></td>\n' +
+    '<td><input type="number" v-model="r.step" /></td>\n' +
     '</tr>\n' +
     '</tbody>\n' +
     '</table>\n' +
@@ -114,10 +117,14 @@ Vue.component('config-component', {
   },
   methods: {
     save: function() {
-      window.localStorage.setItem("open60", org.open60.config);
+      var json = JSON.stringify(org.open60.config);
+      window.localStorage.setItem("open60", json);
     },
     restore: function() {
-      org.open60.config = JSON.parse(JSON.stringify(org.open60.defaultConfig));
+      var json = JSON.stringify(org.open60.defaultConfig);
+      window.localStorage.setItem("open60", json);
+      var clone = JSON.parse(json);
+      org.open60.config = clone;
     }
   }
 });
