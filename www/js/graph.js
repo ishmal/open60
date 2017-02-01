@@ -112,11 +112,13 @@ org.open60.Graph = function(par) {
 		/**
 		 * Draw "cursor"
 		 */
-		ctx.strokeStyle = "cyan";
-		ctx.beginPath();
-		ctx.moveTo(currentX, top);
-		ctx.lineTo(currentX, bottom);
-		ctx.stroke();
+		if (progress > 0.01 && progress < 0.99) {
+			ctx.strokeStyle = "cyan";
+			ctx.beginPath();
+			ctx.moveTo(currentX, top);
+			ctx.lineTo(currentX, bottom);
+			ctx.stroke();
+		}
 
 		/**
 		 * Draw swr

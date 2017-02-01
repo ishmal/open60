@@ -9,7 +9,7 @@ org.open60.defaultConfig = {
   deviceName : "mini",
   ranges : [
     {
-      name: "160m",
+      name: "160 m",
       start: 1750,
       end: 2050,
       step: 5
@@ -75,7 +75,13 @@ org.open60.defaultConfig = {
       step: 10
     },
     {
-      name: "wide",
+      name: "custom 1",
+      start: 1500,
+      end: 30000,
+      step: 200
+    },
+    {
+      name: "custom 2",
       start: 1500,
       end: 30000,
       step: 200

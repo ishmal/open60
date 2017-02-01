@@ -62,7 +62,7 @@ org.open60.App = function() {
 
 		function connectSuccess() {
 			that.connected = true;
-			that.alert("connected");
+			alert("connected");
 			bluetoothSerial.subscribe('\n', receive, subscribeFailure);
 			if (cb) {
 				cb();
