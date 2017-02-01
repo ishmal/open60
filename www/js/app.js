@@ -57,11 +57,12 @@ org.open60.App = function() {
 		}
 
 		function subscribeFailure(msg) {
-			error("subscribe: " + msg);
+			error("subscribe failure: " + msg);
 		}
 
 		function connectSuccess() {
 			that.connected = true;
+			that.alert("connected");
 			bluetoothSerial.subscribe('\n', receive, subscribeFailure);
 			if (cb) {
 				cb();
@@ -70,7 +71,7 @@ org.open60.App = function() {
 
 		function connectFailure(msg) {
 			that.connected = false;
-			error("connecting to '" + device.name + "' : " + msg);
+			error("connect failure with '" + device.name + "' : " + msg);
 		}
 		bluetoothSerial.connect(device.address, connectSuccess, connectFailure);
 	};
