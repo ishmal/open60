@@ -1,5 +1,5 @@
 # open60
-Bluetooth client for the Mini60 antenna analyzer
+Android Bluetooth client for the Mini60 antenna analyzer
 
 ![Alt text](misc/mini60.jpg?raw=true "MINI60")
 ![Alt text](misc/demoscreen.png?raw=true "example")
