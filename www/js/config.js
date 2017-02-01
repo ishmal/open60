@@ -1,5 +1,5 @@
 
-
+(function() {
 
 /**
  * Cnfiguration file.  Modify at will!!  Enjoy
@@ -83,25 +83,38 @@ org.open60.defaultConfig = {
   ]
 };
 
-// clone
-org.open60.config = JSON.parse(window.localStorage.getItem("open60") || "{}");
-if (!org.open60.config || org.open60.config.ns !== 'org.open60') {
+function restoreConfig() {
   var json = JSON.stringify(org.open60.defaultConfig);
   window.localStorage.setItem("open60", json);
   org.open60.config = JSON.parse(json);
 }
 
+function loadConfig() {
+  var cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
+  if (!cfg || cfg.ns !== 'org.open60') {
+    restoreConfig();
+  } else {
+    org.open60.config = cfg;
+  }
+}
+
+function saveConfig() {
+  var json = JSON.stringify(org.open60.config);
+  window.localStorage.setItem("open60", json);
+}
+
+loadConfig();
 
 Vue.component('config-component', {
   template: '\n' +
     '<div class="config-pane">\n' +
     '<button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>\n' +
     '<button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>\n' +
-    '<label>Bluetooth Device<input type="text" v-model="config.deviceName" /></label>\n' +
+    '<label>Bluetooth Device<input type="text" v-model="ns.config.deviceName" /></label>\n' +
     '<table class="table table-sm table-striped" cols="4">\n' +
     '<thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>\n' +
     '<tbody>\n' +
-    '<tr v-for="r in config.ranges">\n' +
+    '<tr v-for="r in ns.config.ranges">\n' +
     '<td><input type="text" v-model="r.name" /></td>\n' +
     '<td><input type="number" v-model="r.start" /></td>\n' +
     '<td><input type="number" v-model="r.end" /></td>\n' +
@@ -112,19 +125,19 @@ Vue.component('config-component', {
     '</div>\n',
   data: function() {
     return {
-      config: org.open60.config
+      ns: org.open60
     };
   },
   methods: {
     save: function() {
-      var json = JSON.stringify(org.open60.config);
-      window.localStorage.setItem("open60", json);
+      saveConfig();
     },
     restore: function() {
-      var json = JSON.stringify(org.open60.defaultConfig);
-      window.localStorage.setItem("open60", json);
-      var clone = JSON.parse(json);
-      org.open60.config = clone;
+      restoreConfig();
     }
   }
 });
+
+
+
+})(); //IIFE
