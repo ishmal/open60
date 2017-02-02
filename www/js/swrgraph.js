@@ -1,7 +1,8 @@
 
 
-
-
+/**
+ * ALternate graph using Chart.js
+ */
 org.open60.SwrGraph = function(par) {
 
   var that = this;
@@ -70,7 +71,6 @@ org.open60.SwrGraph = function(par) {
                 }
               ]
           }
-
       }
   };
 
@@ -78,15 +78,13 @@ org.open60.SwrGraph = function(par) {
   var ctx = canvas.getContext('2d');
   var chart = new Chart(ctx, config);
 
-
-
   this.startScan = function() {
     swrData = [];
     iData = [];
   }
 
   this.endScan = function() {
-
+    //do something!
   }
 
   this.update = function(datapoint) {
@@ -109,6 +107,7 @@ org.open60.SwrGraph = function(par) {
 
   var clicked = false;
 	canvas.addEventListener('click', function() {
+    var ticks;
 		if (!clicked) {
 			clicked = true;
 			setTimeout(function() {
@@ -116,6 +115,9 @@ org.open60.SwrGraph = function(par) {
 					//single
 					par.next();
           config.options.title.text = par.range.name;
+          ticks = config.options.scales.xAxes[0].ticks;
+          ticks.min = par.range.start;
+          ticks.max = par.range.end;
 					that.redraw();
 				}
 				clicked = false;
