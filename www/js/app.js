@@ -121,7 +121,7 @@ org.open60.App = function() {
 		}
 
 		function failure(msg) {
-			error("send: " + msg);
+			error("send failure: " + msg);
 		}
 		bluetoothSerial.write(msg + '\r\n', success, failure);
 	};
