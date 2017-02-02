@@ -99,9 +99,6 @@
                             id: 'A',
                             type: 'logarithmic',
                             position: 'left',
-                            scaleLabel: function (valuePayload) {
-                              return Number(valuePayload.value).toFixed(2).replace('.',',') + '$';
-                            },
                             ticks: {
                               min: 1,
                               max: 10,
@@ -115,9 +112,12 @@
                             position: 'right',
                             ticks: {
                                 min: 1,
-                                max: 1000,
+                                max: 10000,
                                 callback: function(value, index, values) {
-                                  return Math.floor(value).toString();
+                                  var s = Math.floor(value).toString();
+                                  if (s.startsWith('1') || s.startsWith('5')) {
+                                    return s;
+                                  }
                                 }
                             }
                         }],

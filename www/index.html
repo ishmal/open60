@@ -45,11 +45,12 @@
     <script type="text/javascript" src="js/tether.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/Chart.min.js"></script>
 
     <!-- Our files, in proper order -->
     <script type="text/javascript" src="js/ns.js"></script>
     <script type="text/javascript" src="js/config.js"></script>
-    <script type="text/javascript" src="js/graph.js"></script>
+    <script type="text/javascript" src="js/swrgraph.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
 </head>
@@ -74,7 +75,7 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <div class="tab-pane active" id="home" role="tabpanel">
-          <canvas class="graph" id="graph" width="1024" height="768"></canvas>
+          <canvas class="graph" id="chartContainer" width="1024" height="768"></canvas>
         </div>
         <div class="tab-pane" id="config" role="tabpanel">
           <config-component></config-component>
