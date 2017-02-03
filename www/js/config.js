@@ -30,7 +30,7 @@ org.open60.defaultConfig = {
       name: "40 m",
       start: 6900,
       end: 7400,
-      step: 5
+      step: 10
     },
     {
       name: "30 m",
@@ -42,7 +42,7 @@ org.open60.defaultConfig = {
       name: "20 m",
       start: 13800,
       end: 14700,
-      step: 5
+      step: 15
     },
     {
       name: "17 m",
@@ -52,27 +52,27 @@ org.open60.defaultConfig = {
     },
     {
       name: "15 m",
-      start: 20500,
-      end: 22000,
-      step: 5
+      start: 20800,
+      end: 21700,
+      step: 20
     },
     {
       name: "12 m",
       start: 24700,
       end: 25100,
-      step: 5
+      step: 10
     },
     {
       name: "10 m",
       start: 27900,
       end: 30000,
-      step: 10
+      step: 25
     },
     {
       name: "6 m",
       start: 49800,
       end: 54200,
-      step: 10
+      step: 15
     },
     {
       name: "custom 1",
