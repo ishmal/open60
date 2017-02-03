@@ -7,21 +7,18 @@ org.open60.SwrGraph = function(par) {
 
   var that = this;
 
-  var swrData = [];
-  var iData = [];
-
-  var config = {
+  var data = {
       type: 'line',
       data: {
           datasets: [{
               label: 'vswr',
-              data: swrData,
+              data: [],
               xAxisID: 'X',
               yAxisID: 'A',
               backgroundColor: "rgba(153,255,51,0.6)"
           }, {
               label: 'impedance',
-              data: iData,
+              data: [],
               xAxisID: 'X',
               yAxisID: 'B',
               backgroundColor: "rgba(255,153,0,0.6)"
@@ -30,7 +27,7 @@ org.open60.SwrGraph = function(par) {
       options: {
           title: {
             display: true,
-            text: ''
+            text: par.range.name
           },
           scales: {
               yAxes: [{
@@ -76,11 +73,12 @@ org.open60.SwrGraph = function(par) {
 
   var canvas = document.getElementById('chartContainer');
   var ctx = canvas.getContext('2d');
-  var chart = new Chart(ctx, config);
+  var chart = new Chart(ctx, data);
 
   this.startScan = function() {
-    swrData = [];
-    iData = [];
+    var ds = chart.data.datasets;
+    ds[0].data = [];
+    ds[1].data = [];
   }
 
   this.endScan = function() {
@@ -88,34 +86,41 @@ org.open60.SwrGraph = function(par) {
   }
 
   this.update = function(datapoint) {
-    var freq = swrData.length * (par.range.step);
-    swrData.push({
+    var ds = chart.data.datasets;
+    var len = ds[0].data.length;
+    var freq = par.start + len * (par.range.step);
+    ds[0].data.push({
       x: freq,
-      y: datapoint.swr
+      y: 2 //datapoint.swr
     });
-    iData.push({
+    ds[1].data.push({
       x: freq,
-      y: datapoint.r
+      y: 50 // datapoint.r
     });
     this.redraw();
   }
 
   this.redraw = function() {
     chart.update();
-    chart.render();
   }
 
   var clicked = false;
-	canvas.addEventListener('click', function() {
+	canvas.addEventListener('click', function(evt) {
     var ticks;
 		if (!clicked) {
 			clicked = true;
 			setTimeout(function() {
 				if (clicked) {
 					//single
-					par.next();
-          config.options.title.text = par.range.name;
-          ticks = config.options.scales.xAxes[0].ticks;
+          var w = canvas.width;
+          var x = evt.x;
+          if (x < w / 2) {
+            par.prev();
+          } else {
+            par.next();            
+          }
+          data.options.title.text = par.range.name;
+          ticks = data.options.scales.xAxes[0].ticks;
           ticks.min = par.range.start;
           ticks.max = par.range.end;
 					that.redraw();

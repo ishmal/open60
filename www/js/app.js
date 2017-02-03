@@ -34,7 +34,18 @@ org.open60.App = function() {
 	this.next = function() {
 		var ranges = org.open60.config.ranges;
 		var len = ranges.length;
-		this.rangeIndex = (this.rangeIndex + 1) % len;
+		if (++this.rangeIndex >= len) {
+			this.rangeIndex = 0;
+		}
+		this.range = ranges[this.rangeIndex];
+	}
+
+	this.prev = function() {
+		var ranges = org.open60.config.ranges;
+		var len = ranges.length;
+		if (--this.rangeIndex < 0) {
+			this.rangeIndex = len - 1;
+		}
 		this.range = ranges[this.rangeIndex];
 	}
 
