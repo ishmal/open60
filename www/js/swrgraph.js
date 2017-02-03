@@ -13,18 +13,21 @@ org.open60.SwrGraph = function(par) {
           datasets: [{
               label: 'vswr',
               data: [],
+              fill: true,
               xAxisID: 'X',
               yAxisID: 'A',
               backgroundColor: "rgba(153,255,51,0.6)"
           }, {
               label: 'impedance',
               data: [],
+              fill: true,
               xAxisID: 'X',
               yAxisID: 'B',
               backgroundColor: "rgba(255,153,0,0.6)"
           }]
       },
       options: {
+          animation: false,
           title: {
             display: true,
             text: par.range.name
@@ -79,6 +82,7 @@ org.open60.SwrGraph = function(par) {
     var ds = chart.data.datasets;
     ds[0].data = [];
     ds[1].data = [];
+    this.redraw();
   }
 
   this.endScan = function() {
@@ -88,20 +92,22 @@ org.open60.SwrGraph = function(par) {
   this.update = function(datapoint) {
     var ds = chart.data.datasets;
     var len = ds[0].data.length;
-    var freq = par.start + len * (par.range.step);
+    var freq = par.range.start + len * (par.range.step);
     ds[0].data.push({
       x: freq,
-      y: 2 //datapoint.swr
+      y: datapoint.swr
     });
     ds[1].data.push({
       x: freq,
-      y: 50 // datapoint.r
+      y: datapoint.r
     });
     this.redraw();
   }
 
   this.redraw = function() {
-    chart.update();
+    window.requestAnimationFrame(function() {
+      chart.update();
+    });
   }
 
   var clicked = false;
@@ -112,12 +118,12 @@ org.open60.SwrGraph = function(par) {
 			setTimeout(function() {
 				if (clicked) {
 					//single
-          var w = canvas.width;
-          var x = evt.x;
+          var w = canvas.clientWidth;
+          var x = evt.clientX;
           if (x < w / 2) {
             par.prev();
           } else {
-            par.next();            
+            par.next();
           }
           data.options.title.text = par.range.name;
           ticks = data.options.scales.xAxes[0].ticks;
