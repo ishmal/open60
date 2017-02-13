@@ -6,7 +6,7 @@ Android Bluetooth client for the Mini60 antenna analyzer
 
 ### About
 
-Last week I received a Bluetooth-equipped Mini60 Antenna Analyzer from a Chinese eBay seller.  It is an assembled
+A few eeeks ago I received a Bluetooth-equipped Mini60 Antenna Analyzer from a Chinese eBay seller.  It is an assembled
 version of the SARK100 antenna analyzer.  It seems to be made well and robust.  It did not come with software, but
 searching revealed Bluetooth clients for Windows and Android.  The Android client can be downloaded from several
 places, yet I cannot find an "official" site for it, nor can I find any documentation.  The Mini60.apk that I found
