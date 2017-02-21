@@ -21,7 +21,7 @@ by people frustrated with their Bluetooth connection not working.  Maybe this ca
 
 ### Downloads
 
-Installable .apk files for Android can be found here:  https://github.com/ishmal/open60/releases .
+Installable .apk files for Android can be found here:  https://github.com/ishmal/open60/releases .  The easiest way to install is to browse to the releases page with your Android device's browser, and click the link.  Your browser will ask you how to continue.
 
 ### Observations about the Mini60
 
