@@ -19,9 +19,9 @@ It has only been a few weeks but I already have my own Android client working, b
 little app, but it does everything I need.  Maybe it can be useful for you, too.  I have seen a lot of postings
 by people frustrated with their Bluetooth connection not working.  Maybe this can help!.
 
-### Releases
+### Downloads
 
-I will periodically upload a build here:  https://github.com/ishmal/open60/releases .
+Installable .apk files for Android can be found here:  https://github.com/ishmal/open60/releases .
 
 ### Observations about the Mini60
 
