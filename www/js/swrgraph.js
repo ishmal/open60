@@ -14,17 +14,21 @@ org.open60.SwrGraph = function(par) {
           datasets: [{
               label: 'vswr',
               data: [],
-              fill: true,
               xAxisID: 'X',
               yAxisID: 'A',
-              backgroundColor: "rgba(153,255,51,0.6)"
+              fill: false,
+              borderWidth: 6,
+              borderColor: "rgba(75,255,0,0.6)",
+              backgroundColor: "rgba(75,255,0,0.6)"
           }, {
               label: 'impedance',
               data: [],
-              fill: true,
               xAxisID: 'X',
               yAxisID: 'B',
-              backgroundColor: "rgba(255,153,0,0.6)"
+              fill: false,
+              borderWidth: 6,
+              borderColor: "rgba(255,75,0,0.6)",
+              backgroundColor: "rgba(255,75,0,0.6)"
           }]
       },
       options: {
