@@ -1,6 +1,7 @@
 # Mac
 .DS_Store
 
+node_modules/
 plugins/
 platforms/
 resources/signing
