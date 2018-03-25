@@ -7,3 +7,7 @@ platforms/
 resources/signing
 
 .vscode/
+.cache/
+dist/
+www/js/
+.map

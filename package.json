@@ -1,0 +1,50 @@
+{
+  "name": "open60",
+  "version": "1.0.0",
+  "description": "Android Bluetooth client for the Mini60 antenna analyzer",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "chart.js": "^2.7.2",
+    "chartjs-plugin-annotation": "^0.5.7",
+    "cordova-android": "^7.1.0",
+    "cordova-browser": "^5.0.3",
+    "cordova-ios": "~4.3.1",
+    "cordova-plugin-bluetooth-serial": "^0.4.7",
+    "cordova-plugin-toaster": "0.0.2",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.1",
+    "vue": "^2.5.16",
+    "web": "0.0.2"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "parcel-bundler": "^1.6.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishmal/open60.git"
+  },
+  "author": "Bob Jamison, KS5D",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ishmal/open60/issues"
+  },
+  "homepage": "https://github.com/ishmal/open60#readme",
+  "cordova": {
+    "platforms": [
+      "ios",
+      "android",
+      "browser"
+    ],
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-toaster": {},
+      "cordova-plugin-bluetooth-serial": {}
+    }
+  }
+}

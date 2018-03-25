@@ -1,11 +1,10 @@
-
-(function() {
+import Vue from "vue/dist/vue.esm";
 
 /**
- * Cnfiguration file.  Modify at will!!  Enjoy
+ * Configuration file.  Modify at will!!  Enjoy
  */
-org.open60.defaultConfig = {
-  ns: "org.open60",
+const defaultConfig = {
+  id: "Open60Config",
   deviceName : "mini",
   ranges : [
     {
@@ -89,49 +88,52 @@ org.open60.defaultConfig = {
   ]
 };
 
+let config = JSON.parse(JSON.stringify(defaultConfig));
+
 function restoreConfig() {
-  var json = JSON.stringify(org.open60.defaultConfig);
+  var json = JSON.stringify(defaultConfig);
   window.localStorage.setItem("open60", json);
-  org.open60.config = JSON.parse(json);
+  config = JSON.parse(json);
 }
 
 function loadConfig() {
   var cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
-  if (!cfg || cfg.ns !== 'org.open60') {
+  if (!cfg || cfg.id !== "Open60Config") {
     restoreConfig();
   } else {
-    org.open60.config = cfg;
+    config = cfg;
   }
 }
 
 function saveConfig() {
-  var json = JSON.stringify(org.open60.config);
+  var json = JSON.stringify(config);
   window.localStorage.setItem("open60", json);
 }
 
 loadConfig();
 
-Vue.component('config-component', {
-  template: '\n' +
-    '<div class="config-pane">\n' +
-    '<button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>\n' +
-    '<button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>\n' +
-    '<label>Bluetooth Device<input type="text" v-model="ns.config.deviceName" /></label>\n' +
-    '<table class="table table-sm table-striped" cols="4">\n' +
-    '<thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>\n' +
-    '<tbody>\n' +
-    '<tr v-for="r in ns.config.ranges">\n' +
-    '<td><input type="text" v-model="r.name" /></td>\n' +
-    '<td><input type="number" v-model="r.start" /></td>\n' +
-    '<td><input type="number" v-model="r.end" /></td>\n' +
-    '<td><input type="number" v-model="r.step" /></td>\n' +
-    '</tr>\n' +
-    '</tbody>\n' +
-    '</table>\n' +
-    '</div>\n',
+Vue.component("config-component", {
+  template: `
+    <div class="config-pane">
+    <button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>
+    <button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>
+    <label>Bluetooth Device<input type="text" v-model="config.deviceName" /></label>
+    <table class="table table-sm table-striped" cols="4">
+    <thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>
+    <tbody>
+    <tr v-for="r in config.ranges">
+    <td><input type="text" v-model="r.name" /></td>
+    <td><input type="number" v-model="r.start" /></td>
+    <td><input type="number" v-model="r.end" /></td>
+    <td><input type="number" v-model="r.step" /></td>
+    </tr>
+    </tbody>
+	</table>
+	</div>
+    `,
   data: function() {
     return {
-      ns: org.open60
+      config: config
     };
   },
   methods: {
@@ -144,6 +146,5 @@ Vue.component('config-component', {
   }
 });
 
+export default config;
 
-
-})(); //IIFE
