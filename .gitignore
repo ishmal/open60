@@ -9,5 +9,5 @@ resources/signing
 .vscode/
 .cache/
 dist/
-www/js/
+www/
 .map

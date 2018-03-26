@@ -40,11 +40,9 @@
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 	<title>Open60</title>
 
-	<!--<script type="text/javascript" src="cordova.js"></script>-->
+	<!--CORDOVA-->
 	<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
-	<!--<script type="text/javascript" src="js/tether.min.js"></script>-->
 	<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-
 	<script type="module" src="js/index.js"></script>
 </head>
 
@@ -67,10 +65,10 @@
 		</ul>
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane active" id="home" role="tabpanel">
+			<div class="tab-pane chart-pane active" id="home" role="tabpanel">
 				<canvas class="graph" id="chartContainer" width="1024" height="768"></canvas>
 			</div>
-			<div class="tab-pane" id="config" role="tabpanel">
+			<div class="tab-pane config-pane" id="config" role="tabpanel">
 				<config-component></config-component>
 			</div>
 			<div class="tab-pane about-pane" id="about" role="tabpanel">

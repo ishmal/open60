@@ -117,7 +117,7 @@ Vue.component("config-component", {
     <div class="config-pane">
     <button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>
     <button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>
-    <label>Bluetooth Device<input type="text" v-model="config.deviceName" /></label>
+    <label>Bluetooth Device <input type="text" v-model="config.deviceName" /></label>
     <table class="table table-sm table-striped" cols="4">
     <thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>
     <tbody>

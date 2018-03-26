@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "gulp": "^4.0.0",
+    "gulp-replace": "^0.6.1",
     "parcel-bundler": "^1.6.2"
   },
   "scripts": {

@@ -20,6 +20,7 @@
 import App from "./app";
 import Vue from "vue/dist/vue.esm";
 
+
 /**
  * This boots everything up
  */
@@ -30,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Start Vue
 	let app = new Vue({
-		el: '#config',
+		el: "#config",
 		data: {}
 	});
 

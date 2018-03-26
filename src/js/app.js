@@ -1,4 +1,3 @@
-
 import SwrGraph from "./swrgraph";
 import config from "./config";
 
@@ -27,12 +26,12 @@ function error(msg) {
 class App {
 	constructor() {
 
-	this.ready = false;
-	this.connected = false;
-	this.rangeIndex = 0;
-	this.range = config.ranges[0];
-	this.graph = new SwrGraph(this);
-	this.startHeartbeat();
+		this.ready = false;
+		this.connected = false;
+		this.rangeIndex = 0;
+		this.range = config.ranges[0];
+		this.graph = new SwrGraph(this);
+		this.startHeartbeat();
 	}
 
 	next() {
@@ -80,7 +79,7 @@ class App {
 		function connectSuccess() {
 			that.connected = true;
 			alert("connected");
-			bluetoothSerial.subscribe('\n', receive, subscribeFailure);
+			bluetoothSerial.subscribe("\n", receive, subscribeFailure);
 			if (cb) {
 				cb();
 			}
@@ -95,7 +94,7 @@ class App {
 
 	disconnect() {
 		let that = this;
-		
+
 		function success() {
 			that.connected = false;
 		}
@@ -112,12 +111,12 @@ class App {
 	receive(data) {
 		// console.log(data);
 		data = data.trim();
-		if (data.startsWith('Start')) {
+		if (data.startsWith("Start")) {
 			this.graph.startScan();
 		} else if (data.startsWith("End")) {
 			this.graph.endScan();
 		} else {
-			let arr = data.split(',');
+			let arr = data.split(",");
 			if (arr.length === 4) {
 				let dp = {
 					swr: parseFloat(arr[0]),
@@ -142,14 +141,15 @@ class App {
 		function failure(msg) {
 			error("send failure: " + msg);
 		}
-		bluetoothSerial.write(msg + '\r\n', success, failure);
+		bluetoothSerial.write(msg + "\r\n", success, failure);
 	}
 
 	findDeviceAndConnect(cb) {
-		let deviceName = org.open60.config.deviceName;
+		let deviceName = config.deviceName;
 		deviceName = deviceName.toLowerCase();
+
 		function success(devices) {
-			let dev = devices.find(function(d) {
+			let dev = devices.find(function (d) {
 				let name = d.name.toLowerCase();
 				return name.startsWith(deviceName);
 			});
@@ -166,44 +166,49 @@ class App {
 	}
 
 	scan() {
-			let r = this.range;
-			let start = r.start * 1000;
-			let end = r.end * 1000;
-			let step = r.step * 1000;
-			let cmd = "scan " + start + " " + end + " " + step;
-			this.send(cmd);
+		let r = this.range;
+		let start = r.start * 1000;
+		let end = r.end * 1000;
+		let step = r.step * 1000;
+		let cmd = "scan " + start + " " + end + " " + step;
+		this.send(cmd);
 	}
 
 	checkConnectAndScan() {
+		let that = this;
 		if (this.connected) {
 			this.scan();
 		} else {
-			this.findDeviceAndConnect(function() {
-				that.scan();
-			});
+			this.findDeviceAndConnect(() => that.scan());
 		}
 	}
 
 	startHeartbeat() {
 		let that = this;
-		this.timer = setInterval(function() {
+		this.timer = setInterval(() => {
 			function success() {
 				that.connected = true;
 			}
 			function failure() {
 				that.connected = false;
 			}
-			if (typeof bluetoothSerial !== 'undefined') {
+			if (typeof bluetoothSerial !== "undefined") {
 				bluetoothSerial.isConnected(success, failure);
 			} else {
 				that.connected = false;
 			}
 			that.graph.redraw();
-		}, 3000);
+		}, 4000);
 	};
+
+	stopHeartbeat() {
+		if (this.timer) {
+			clearInterval(this.timer);
+			this.timer = null;
+		}
+	}
 
 
 }
 
 export default App;
-
