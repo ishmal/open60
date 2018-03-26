@@ -18,8 +18,6 @@
  */
 
 import App from "./app";
-import Vue from "vue/dist/vue.esm";
-
 
 /**
  * This boots everything up
@@ -28,11 +26,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Make our app
 	let open60app = new App();
-
-	// Start Vue
-	let app = new Vue({
-		el: "#config",
-		data: {}
-	});
 
 });

@@ -1,5 +1,5 @@
 import SwrGraph from "./swrgraph";
-import config from "./config";
+import Config from "./config";
 
 function trace(msg) {
 	console.log(msg);
@@ -29,13 +29,14 @@ class App {
 		this.ready = false;
 		this.connected = false;
 		this.rangeIndex = 0;
-		this.range = config.ranges[0];
+		this.config = new Config();
+		this.range = this.config.config.ranges[0];
 		this.graph = new SwrGraph(this);
 		this.startHeartbeat();
 	}
 
 	next() {
-		let ranges = config.ranges;
+		let ranges = this.config.config.ranges;
 		let len = ranges.length;
 		if (++this.rangeIndex >= len) {
 			this.rangeIndex = 0;
@@ -44,7 +45,7 @@ class App {
 	}
 
 	prev() {
-		let ranges = config.ranges;
+		let ranges = this.config.config.ranges;
 		let len = ranges.length;
 		if (--this.rangeIndex < 0) {
 			this.rangeIndex = len - 1;

@@ -1,4 +1,5 @@
-import Vue from "vue/dist/vue.esm";
+
+import Rx from 'rxjs/Rx';
 
 /**
  * Configuration file.  Modify at will!!  Enjoy
@@ -88,63 +89,92 @@ const defaultConfig = {
   ]
 };
 
-let config = JSON.parse(JSON.stringify(defaultConfig));
 
-function restoreConfig() {
-  var json = JSON.stringify(defaultConfig);
-  window.localStorage.setItem("open60", json);
-  config = JSON.parse(json);
+
+class Config {
+	constructor() {
+		this.config = JSON.parse(JSON.stringify(defaultConfig));
+		this.anchor = document.getElementById("config");
+		this.load();
+	}
+
+	restore() {
+		let json = JSON.stringify(defaultConfig);
+		window.localStorage.setItem("open60", json);
+		this.config = JSON.parse(json);
+		this.render();
+	}
+	  
+	load() {
+		let cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
+		if (!cfg || cfg.id !== "Open60Config") {
+		  this.restore();
+		} else {
+		  this.config = cfg;
+		  this.render();
+		}
+	  }
+	  
+	save() {
+		let json = JSON.stringify(this.config);
+		window.localStorage.setItem("open60", json);
+	}
+	  
+
+	render() {
+		let c = this.config;
+		let ranges = c.ranges;
+		let buf = "";
+		ranges.forEach(r => {
+			let row = `
+			<tr>
+			<td><input type="text"   value="${r.name}"/></td>
+			<td><input type="number" value="${r.start}"/></td>
+			<td><input type="number" value="${r.end}"/></td>
+			<td><input type="number" value="${r.step}"/></td>
+			</tr>
+			`;
+			buf += row;
+		});
+
+		let html = `
+		<div class="config-form">
+		<button id="config-save" class="btn btn-primary" >Save</button>
+		<button id="config-restore" class="btn btn-primary">Restore defaults</button>
+		<label>Bluetooth Device <input id="config-device" type="text" value="${c.deviceName}"/></label>
+		<table class="table table-sm table-striped" cols="4">
+		<thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>
+		<tbody>
+		${buf}
+		</tbody>
+		</table>
+		</div>
+		`;
+		this.anchor.innerHTML = html;
+
+		let saveBtn = document.getElementById("config-save");
+		saveBtn.addEventListener("click", () => this.save());
+		let restoreBtn = document.getElementById("config-restore");
+		restoreBtn.addEventListener("click", () => this.restore());
+		let deviceTxt = document.getElementById("config-device");
+		Rx.Observable.fromEvent(deviceTxt, "input")
+			.map(e => e.target.value)
+			.subscribe(v => c.deviceName = v);
+		let rows = document.querySelectorAll(".config-form tbody tr");
+		for (let i = 0, len = rows.length ; i < len ; i++) {
+			let row = rows[i];
+			let cols = row.querySelectorAll("input");
+			Rx.Observable.fromEvent(cols[0], "input").map(e => e.target.value)
+				.subscribe(v => ranges[i].name = parseInt(v));
+			Rx.Observable.fromEvent(cols[1], "input").map(e => e.target.value)
+				.subscribe(v => ranges[i].start = parseInt(v));
+			Rx.Observable.fromEvent(cols[2], "input").map(e => e.target.value)
+				.subscribe(v => ranges[i].end = parseInt(v));
+			Rx.Observable.fromEvent(cols[3], "input").map(e => e.target.value)
+				.subscribe(v => ranges[i].step = parseInt(v));
+		}
+	}
 }
 
-function loadConfig() {
-  var cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
-  if (!cfg || cfg.id !== "Open60Config") {
-    restoreConfig();
-  } else {
-    config = cfg;
-  }
-}
-
-function saveConfig() {
-  var json = JSON.stringify(config);
-  window.localStorage.setItem("open60", json);
-}
-
-loadConfig();
-
-Vue.component("config-component", {
-  template: `
-    <div class="config-pane">
-    <button v-on:click="save()" type="button" class="btn btn-primary" >Save</button>
-    <button v-on:click="restore()"  type="button" class="btn btn-primary">Restore defaults</button>
-    <label>Bluetooth Device <input type="text" v-model="config.deviceName" /></label>
-    <table class="table table-sm table-striped" cols="4">
-    <thead><th>name</th><th>start khz</th><th>end khz</th><th>step khz</th></thead>
-    <tbody>
-    <tr v-for="r in config.ranges">
-    <td><input type="text" v-model="r.name" /></td>
-    <td><input type="number" v-model="r.start" /></td>
-    <td><input type="number" v-model="r.end" /></td>
-    <td><input type="number" v-model="r.step" /></td>
-    </tr>
-    </tbody>
-	</table>
-	</div>
-    `,
-  data: function() {
-    return {
-      config: config
-    };
-  },
-  methods: {
-    save: function() {
-      saveConfig();
-    },
-    restore: function() {
-      restoreConfig();
-    }
-  }
-});
-
-export default config;
+export default Config;
 
