@@ -138,7 +138,7 @@ class Config {
 		<div class="config-form">
 		<button id="config-save" class="btn btn-primary" >Save</button>
 		<button id="config-restore" class="btn btn-primary">Restore defaults</button>
-		<label>Bluetooth Device <input id="config-device" type="text" value="${
+		<label>Bluetooth Device name <input id="config-device" type="text" value="${
 			c.deviceName
 		}"/></label>
 		<table class="table table-sm table-striped" cols="4">
