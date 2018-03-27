@@ -36,14 +36,15 @@
 	<meta name="msapplication-tap-highlight" content="no">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-	<link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
 	<title>Open60</title>
 
-	<!--CORDOVA-->
-	<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
-	<script type="text/javascript" src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script type="module" src="js/index.js"></script>
+	<script type="text/javascript" src="js/cordova.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+
 </head>
 
 <body>
@@ -71,8 +72,8 @@
 			<div class="tab-pane config-pane" id="config" role="tabpanel">
 			</div>
 			<div class="tab-pane about-pane" id="about" role="tabpanel">
-				<h3>Open60</h3>
-				<p>A simple app for a simple device</p>
+				<img alt="open60 logo" src="img/icon.png" width="100" height="100"/>
+				<p>An Android client for the Mini60 and SARK100 bluetooth enabled antenna analyzers</p>
 				<p>Github home:
 					<a href="https://github.com/ishmal/open60">https://github.com/ishmal/open60</a>
 				</p>
@@ -85,7 +86,7 @@
 
 				<h3>How to use:</h3>
 
-				<img src="img/mini60.jpg"></img>
+				<img src="img/mini60.jpg" ></img>
 
 				<h4>Pairing</h4>
 				<p>
@@ -106,7 +107,7 @@
 
 				<h4>Select a range to scan</h4>
 				<p>
-					Tap the Open60 app screen slowly to cycle through the preset ranges. If you tap too quickly, it will be a double-tap which
+					Tap the Open60 app screen on the left or right side slowly to cycle through the preset ranges. If you tap too quickly, it will be a double-tap which
 					will start a scan. Tap on the right side to cycle up, left side to cycle down.
 				</p>
 

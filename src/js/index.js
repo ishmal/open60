@@ -19,12 +19,10 @@
 
 import App from "./app";
 
-/**
- * This boots everything up
- */
-document.addEventListener("DOMContentLoaded", function () {
-
-	// Make our app
-	let open60app = new App();
-
-});
+(function() {
+	document.addEventListener("DOMContentLoaded", function() {
+		document.addEventListener("deviceready", function() {
+			new App();			
+		}, true);
+	});
+})();

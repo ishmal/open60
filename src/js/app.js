@@ -19,13 +19,11 @@ function error(msg) {
 	}
 }
 
-
 /**
  * SARK100/Mini50 bluetooth interface
  */
 class App {
 	constructor() {
-
 		this.ready = false;
 		this.connected = false;
 		this.rangeIndex = 0;
@@ -107,7 +105,7 @@ class App {
 			bluetoothSerial.unsubscribe();
 			bluetoothSerial.disconnect(success, failure);
 		}
-	};
+	}
 
 	receive(data) {
 		// console.log(data);
@@ -146,18 +144,20 @@ class App {
 	}
 
 	findDeviceAndConnect(cb) {
-		let deviceName = config.deviceName;
+		let that = this;
+		let deviceName = this.config.config.deviceName;
 		deviceName = deviceName.toLowerCase();
 
 		function success(devices) {
-			let dev = devices.find(function (d) {
+			let dev = devices.find(d => {
 				let name = d.name.toLowerCase();
 				return name.startsWith(deviceName);
 			});
 			if (!dev) {
 				error("Paired device '" + deviceName + "' not found");
+			} else {
+				that.connect(dev, cb);
 			}
-			that.connect(dev, cb);
 		}
 
 		function failure(msg) {
@@ -200,7 +200,7 @@ class App {
 			}
 			that.graph.redraw();
 		}, 4000);
-	};
+	}
 
 	stopHeartbeat() {
 		if (this.timer) {
@@ -208,8 +208,10 @@ class App {
 			this.timer = null;
 		}
 	}
-
-
 }
 
 export default App;
+
+export function launchApplication() {
+	new App();
+}

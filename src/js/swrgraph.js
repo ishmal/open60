@@ -153,15 +153,19 @@ class SwrGraph {
 	}
 
 	setupEvents() {
+		let that = this;
 		let par = this.par;
+		let data = this.data;
+		let canvas = this.canvas;
 		let clicked = false;
 		this.canvas.addEventListener('click', (evt) => {
+			evt.preventDefault();
 			if (!clicked) {
 				clicked = true;
 				setTimeout(() => {
 					if (clicked) {
 						//single
-						let w = this.canvas.clientWidth;
+						let w = canvas.clientWidth;
 						let x = evt.clientX;
 						if (x < w / 2) {
 							par.prev();
@@ -172,14 +176,14 @@ class SwrGraph {
 						let ticks = data.options.scales.xAxes[0].ticks;
 						ticks.min = par.range.start;
 						ticks.max = par.range.end;
-						this.redraw();
+						that.redraw();
 					}
 					clicked = false;
 				}, 300);
 			} else {
 				//double
 				clicked = false;
-				this.par.checkConnectAndScan();
+				par.checkConnectAndScan();
 			}
 		});
 
