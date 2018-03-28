@@ -39,7 +39,7 @@ gulp.task("copyfiles", async () => {
 	await p_mkdirp(WWWIMG);
 	await copy("index.html", SRC, WWW);
 	await copy("index.js", SRCJS, WWWJS);
-	await copy("cordova.js", SRCJS, WWWJS);
+	//await copy("cordova.js", SRCJS, WWWJS);
 	await copy("index.css", SRCCSS, WWWCSS);
 	await copy("mini60.jpg", SRCIMG, WWWIMG);
 	await copy("icon.png", SRCIMG, WWWIMG);

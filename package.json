@@ -4,10 +4,11 @@
   "description": "Android Bluetooth client for the Mini60 antenna analyzer",
   "main": "index.js",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.42",
     "bootstrap": "^4.0.0",
     "chart.js": "^2.7.2",
     "chartjs-plugin-annotation": "^0.5.7",
-    "cordova-android": "^7.1.0",
+    "cordova-android": "7.0.0",
     "cordova-browser": "^5.0.3",
     "cordova-custom-config": "^5.0.2",
     "cordova-ios": "~4.3.1",
@@ -41,8 +42,8 @@
   "cordova": {
     "platforms": [
       "ios",
-      "android",
-      "browser"
+      "browser",
+      "android"
     ],
     "plugins": {
       "cordova-plugin-whitelist": {},

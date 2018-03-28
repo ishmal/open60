@@ -1,5 +1,10 @@
 import SwrGraph from "./swrgraph";
 import Config from "./config";
+import '@babel/polyfill';
+
+//#######################################################
+//# MESSAGES
+//#######################################################
 
 function trace(msg) {
 	console.log(msg);
@@ -18,6 +23,84 @@ function error(msg) {
 		navigator.showToast(msg);
 	}
 }
+
+//#######################################################
+//# Promisify bluetoothSerial functions
+//#######################################################
+
+function btIsConnected() {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btIsConnected: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.isConnected(resolve, reject);
+		}
+	});
+}
+
+function btList() {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btList: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.list(resolve, reject);
+		}
+	});
+}
+
+function btConnect(address) {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btConnect: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.write(address, resolve, reject);
+		}
+	});
+}
+
+function btDisconnect() {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btDisconnect: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.disconnect(resolve, reject);
+		}
+	});
+}
+
+function btSubscribe(receiveCb) {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btSubscribe: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.subscribe("\n", receiveCb, reject);
+		}
+	});
+}
+
+function btUnsubscribe(receiveCb) {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btUnsubscribe: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.unsubscribe(resolve, reject);
+		}
+	});
+}
+
+function btWrite(str) {
+	return new Promise((resolve, reject) => {
+		if (typeof bluetoothSerial === "undefined") {
+			reject("btWrite: bluetoothSerial not found");
+		} else {
+			bluetoothSerial.write(msg + "\r\n", resolve, reject);
+		}
+	});
+}
+
+//#######################################################
+//# M A I N
+//#######################################################
 
 /**
  * SARK100/Mini50 bluetooth interface
@@ -51,64 +134,31 @@ class App {
 		this.range = ranges[this.rangeIndex];
 	}
 
-	checkConnect() {
-		function success() {
-			that.connected = true;
+	async connect(device) {
+		
+		try {
+			await btConnect(device.address);
+			await btSubscribe("\n", (data) => this.receive(data));
+		} catch(e) {
+			error("connect failure with '" + device.name + "' : " + e);
 		}
 
-		function failure() {
-			that.connected = false;
-		}
-		if (typeof bluetoothSerial !== "undefined") {
-			bluetoothSerial.isConnected(success, failure);
-		}
 	}
 
-	connect(device, cb) {
-		let that = this;
-
-		function receive(data) {
-			that.receive(data);
+	async disconnect() {
+		if (!this.connected) {
+			return;
 		}
-
-		function subscribeFailure(msg) {
-			error("subscribe failure: " + msg);
-		}
-
-		function connectSuccess() {
-			that.connected = true;
-			alert("connected");
-			bluetoothSerial.subscribe("\n", receive, subscribeFailure);
-			if (cb) {
-				cb();
-			}
-		}
-
-		function connectFailure(msg) {
-			that.connected = false;
-			error("connect failure with '" + device.name + "' : " + msg);
-		}
-		bluetoothSerial.connect(device.address, connectSuccess, connectFailure);
-	}
-
-	disconnect() {
-		let that = this;
-
-		function success() {
-			that.connected = false;
-		}
-
-		function failure(msg) {
-			that.connected = false;
-		}
-		if (that.connected) {
-			bluetoothSerial.unsubscribe();
-			bluetoothSerial.disconnect(success, failure);
+		try {
+			await btUnsubscribe();
+			await btDisconnect();
+		} catch(e) {
+			error("unsubscribe: " + e);
 		}
 	}
 
 	receive(data) {
-		// console.log(data);
+		data = data || "";
 		data = data.trim();
 		if (data.startsWith("Start")) {
 			this.graph.startScan();
@@ -128,42 +178,41 @@ class App {
 		}
 	}
 
-	send(msg) {
-		if (!this.connected) {
+	async send(msg) {
+		if (!msg) {
 			return;
 		}
-
-		function success() {
-			trace("sent!");
+		try {
+			await btWrite(msg + "\r\n");
+			//trace("sent!");
+		} catch(e) {
+			error("send: " + e);
 		}
-
-		function failure(msg) {
-			error("send failure: " + msg);
-		}
-		bluetoothSerial.write(msg + "\r\n", success, failure);
 	}
 
-	findDeviceAndConnect(cb) {
-		let that = this;
+	findDevice(devices) {
 		let deviceName = this.config.config.deviceName;
 		deviceName = deviceName.toLowerCase();
+		let dev = devices.find(d => {
+			let name = d.name.toLowerCase();
+			return name.startsWith(deviceName);
+		});
+		if (!dev) {
+			error("Paired device '" + deviceName + "' not found");
+		}
+		return dev;
+	}
 
-		function success(devices) {
-			let dev = devices.find(d => {
-				let name = d.name.toLowerCase();
-				return name.startsWith(deviceName);
-			});
-			if (!dev) {
-				error("Paired device '" + deviceName + "' not found");
-			} else {
-				that.connect(dev, cb);
+	async findDeviceAndConnect() {
+		try {
+			let devices = await btList();
+			let dev = this.findDevice(devices);
+			if (dev) {
+				await this.connect(dev);
 			}
+		} catch (e) {
+			error("findDeviceAndConnect: cannot list paired devices: " + e);
 		}
-
-		function failure(msg) {
-			error("cannot list paired devices");
-		}
-		bluetoothSerial.list(success, failure);
 	}
 
 	scan() {
@@ -175,30 +224,26 @@ class App {
 		this.send(cmd);
 	}
 
-	checkConnectAndScan() {
-		let that = this;
+	async checkConnectAndScan() {
 		if (this.connected) {
+			return this.scan();
+		}
+		try {
+			await this.findDeviceAndConnect();
 			this.scan();
-		} else {
-			this.findDeviceAndConnect(() => that.scan());
+		} catch (e) {
+			error("checkConnectAndScan: " + e);
 		}
 	}
 
 	startHeartbeat() {
-		let that = this;
-		this.timer = setInterval(() => {
-			function success() {
-				that.connected = true;
+		this.timer = setInterval(async () => {
+			try {
+				this.connected = await btIsConnected();
+				this.graph.redraw();
+			} catch (e) {
+				//error("heartbeat: " + e);  //this message is annoying
 			}
-			function failure() {
-				that.connected = false;
-			}
-			if (typeof bluetoothSerial !== "undefined") {
-				bluetoothSerial.isConnected(success, failure);
-			} else {
-				that.connected = false;
-			}
-			that.graph.redraw();
 		}, 4000);
 	}
 

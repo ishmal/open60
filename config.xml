@@ -28,6 +28,6 @@
     <plugin name="cordova-plugin-toaster" spec="0.0.2" />
     <plugin name="cordova-plugin-bluetooth-serial" spec="^0.4.7" />
     <engine name="ios" spec="~4.3.1" />
-    <engine name="android" spec="^7.1.0" />
     <engine name="browser" spec="^5.0.3" />
+    <engine name="android" spec="7.0.0" />
 </widget>
