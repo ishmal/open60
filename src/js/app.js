@@ -211,7 +211,3 @@ class App {
 }
 
 export default App;
-
-export function launchApplication() {
-	new App();
-}
