@@ -88,7 +88,7 @@ function btUnsubscribe(receiveCb) {
 	});
 }
 
-function btWrite(str) {
+function btWrite(msg) {
 	return new Promise((resolve, reject) => {
 		if (typeof bluetoothSerial === "undefined") {
 			reject("btWrite: bluetoothSerial not found");
