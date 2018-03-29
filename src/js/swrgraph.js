@@ -1,7 +1,8 @@
 /* jshint esversion: 6 */
 
 import Chart from "chart.js";
-
+//make sure it is bundled
+import annotationPlugin from "chartjs-plugin-annotation";
 /**
  * Alternate graph using Chart.js
  */
@@ -11,11 +12,11 @@ class SwrGraph {
 		this.par = par;
 		this.minSwr = 999;
 		this.minSwrFreq = par.range.start;
-		this.canvas = document.getElementById('chartContainer');
-		this.ctx = this.canvas.getContext('2d');
-		this.annots = [];
+		this.canvas = document.getElementById("chartContainer");
+		this.ctx = this.canvas.getContext("2d");
 		this.initData();
 		this.chart = new Chart(this.ctx, this.data);
+		Chart.pluginService.register(annotationPlugin);
 		this.setupEvents();
 	}
 
@@ -23,24 +24,24 @@ class SwrGraph {
 
 		this.data = {
 			plugins: [
-				"chartjs-plugin-annotation"
+				annotationPlugin
 			],
-			type: 'line',
+			type: "line",
 			data: {
 				datasets: [{
-					label: 'vswr',
+					label: "vswr",
 					data: [],
-					xAxisID: 'X',
-					yAxisID: 'A',
+					xAxisID: "X",
+					yAxisID: "A",
 					fill: false,
 					borderWidth: 6,
 					borderColor: "rgba(75,255,0,0.6)",
 					backgroundColor: "rgba(75,255,0,0.6)"
-				}, {
-					label: 'impedance',
+			}, {
+					label: "impedance",
 					data: [],
-					xAxisID: 'X',
-					yAxisID: 'B',
+					xAxisID: "X",
+					yAxisID: "B",
 					fill: false,
 					borderWidth: 6,
 					borderColor: "rgba(255,75,0,0.6)",
@@ -51,40 +52,49 @@ class SwrGraph {
 				animation: false,
 				title: {
 					display: true,
-					text: this.par.range.name
+					text: this.par.range.name,
+					fontSize: 14,
+					fontStyle: "bold",
+					fontColor: "yellow"
 				},
 				scales: {
 					yAxes: [{
-						id: 'A',
-						type: 'logarithmic',
-						position: 'left',
+						id: "A",
+						type: "logarithmic",
+						position: "left",
 						ticks: {
 							min: 1,
 							max: 10,
+							fontStyle: "bold",
+							fontColor: "yellow",
 							callback: function (value, index, values) {
 								return Math.floor(value).toString();
 							}
 						}
 					}, {
-						id: 'B',
-						type: 'logarithmic',
-						position: 'right',
+						id: "B",
+						type: "logarithmic",
+						position: "right",
 						ticks: {
 							min: 1,
 							max: 10000,
+							fontStyle: "bold",
+							fontColor: "yellow",
 							callback: function (value, index, values) {
 								let s = Math.floor(value).toString();
-								if (s.startsWith('1') || s.startsWith('5')) {
+								if (s.startsWith("1") || s.startsWith("5")) {
 									return s;
 								}
 							}
 						}
 					}],
 					xAxes: [{
-						id: 'X',
+						id: "X",
 						type: "linear",
 						position: "bottom",
 						ticks: {
+							fontStyle: "bold",
+							fontColor: "yellow",
 							min: 13600,
 							max: 14700
 						}
@@ -92,7 +102,7 @@ class SwrGraph {
 				},
 				annotation: {
 					drawTime: "afterDraw",
-					annotations: this.annots
+					annotations: []
 				}
 			}
 		};
@@ -101,10 +111,14 @@ class SwrGraph {
 
 	startScan() {
 		let range = this.par.range;
+		//this 'ticks' code duplicated below intentionally
+		let ticks = this.data.options.scales.xAxes[0].ticks;
+		ticks.min = range.start;
+		ticks.max = range.end;
 		let ds = this.chart.data.datasets;
 		ds[0].data = [];
 		ds[1].data = [];
-		this.annots.length = 0;
+		this.data.options.annotation.annotations = [];
 		this.minSwr = 999;
 		this.minSwrFreq = range.start;
 		this.minR = Number.MAX_VALUE;
@@ -113,28 +127,31 @@ class SwrGraph {
 	}
 
 	endScan() {
-		let txt = this.minSwrFreq.toFixed(1) + '  :  ' + this.minSwr.toFixed(1);
+		let txt = this.minSwrFreq.toFixed(0) + "   :   " + this.minSwr.toFixed(1);
 		let annot = {
-			type: 'line',
-			mode: 'vertical',
-			scaleID: 'X',
+			type: "line",
+			mode: "vertical",
+			scaleID: "X",
 			value: this.minSwrFreq,
-			borderColor: 'red',
-			borderWidth: 2,
+			borderColor: "red",
+			borderWidth: 3,
 			label: {
 				enabled: true,
+				fontSize: 14,
 				content: txt
 			}
 		};
-		this.annots.push(annot);
+		let annots = this.data.options.annotation.annotations;
+		annots.push(annot);
 		this.redraw();
 	}
 
 	update(datapoint) {
 		let range = this.par.range;
+		let nrSteps = this.par.nrSteps;
 		let ds = this.chart.data.datasets;
 		let len = ds[0].data.length;
-		let freq = range.start + len * range.step;
+		let freq = range.start + (range.end - range.start) * len / nrSteps;
 		let swr = datapoint.swr;
 		if (swr < this.minSwr) {
 			this.minSwr = swr;
@@ -152,7 +169,13 @@ class SwrGraph {
 	}
 
 	redraw() {
-		window.requestAnimationFrame(() => this.chart.update(0));
+		window.requestAnimationFrame(() => {
+			try {
+				this.chart.update(0);
+			} catch(e) {
+				console.log("redraw: " + e);
+			}
+		});
 	}
 
 	setupEvents() {
@@ -161,7 +184,7 @@ class SwrGraph {
 		let data = this.data;
 		let canvas = this.canvas;
 		let clicked = false;
-		this.canvas.addEventListener('click', (evt) => {
+		this.canvas.addEventListener("click", (evt) => {
 			evt.preventDefault();
 			if (!clicked) {
 				clicked = true;

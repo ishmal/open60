@@ -6,6 +6,7 @@ import '@babel/polyfill';
 import { btIsConnected, btList, btConnect, btDisconnect, 
 	btSubscribe, btUnsubscribe, btWrite } from "./bt";
 
+const isBrowser = false;
 
 //#######################################################
 //# MESSAGES
@@ -42,6 +43,7 @@ class App {
 		this.ready = false;
 		this.connected = false;
 		this.rangeIndex = 0;
+		this.nrSteps = 50;
 		this.config = new Config();
 		this.range = this.config.config.ranges[0];
 		this.graph = new SwrGraph(this);
@@ -112,6 +114,7 @@ class App {
 		}
 	}
 
+
 	send(msg) {
 		if (!msg) {
 			return;
@@ -149,17 +152,49 @@ class App {
 		});
 	}
 
+	dummyScan() {
+		let that = this;
+		this.receive("Start");
+		let r = this.range;
+		let start = r.start * 1000;
+		let end = r.end * 1000;
+		let step = ((end - start) / this.nrSteps) | 0;
+		let freq = start;
+		let xp = 0;
+		let xinc = Math.PI / this.nrSteps;
+		function runme() {
+			let swr = 5 - Math.sin(xp);
+			xp += xinc;
+			let r = 4 - Math.sin(xp * 2);
+			let x = 3;
+			let z = 2;
+			let data = `${swr},${r},${x},${z}`;
+			that.receive(data);
+			freq += step;
+			if (freq < end) {
+				setTimeout(runme, 50);
+			} else {
+				that.receive("End");
+			}
+		}
+		runme();
+	}
+
 	scan() {
 		let r = this.range;
 		let start = r.start * 1000;
 		let end = r.end * 1000;
-		let step = r.step * 1000;
+		let step = ((end - start) / this.nrSteps) | 0;
 		let cmd = "scan " + start + " " + end + " " + step;
 		trace("cmd: " + cmd);
 		return this.send(cmd);
 	}
 
 	checkConnectAndScan() {
+		if (isBrowser) {
+			this.dummyScan();
+			return;
+		}
 		if (this.connected) {
 			return this.scan();
 		}
@@ -173,6 +208,9 @@ class App {
 	}
 
 	heartbeat() {
+		if (isBrowser) {
+			return;
+		}
 		//success = yes, failure = no
 		return btIsConnected()
 		.then(() => {
