@@ -5,7 +5,6 @@ const promisify = require("util").promisify;
 const del = require("del");
 const mkdirp = require("mkdirp");
 const webpack = require("webpack");
-const appIcon = require("app-icon");
 
 const p_copyFile = promisify(fs.copyFile);
 const p_mkdirp = promisify(mkdirp);

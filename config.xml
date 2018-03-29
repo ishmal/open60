@@ -8,7 +8,7 @@
         Bob Jamison
     </author>
     <content src="index.html" />
-    <icon src="src/img/icon.png" platform="ios" width="57" height="57" density="mdpi" />
+    <icon density="mdpi" height="57" platform="ios" src="src/img/icon.png" width="57" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

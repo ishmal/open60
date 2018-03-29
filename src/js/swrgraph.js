@@ -1,8 +1,10 @@
 /* jshint esversion: 6 */
 
 import Chart from "chart.js";
-//make sure it is bundled
 import annotationPlugin from "chartjs-plugin-annotation";
+
+import Hammer from "hammerjs";
+
 /**
  * Alternate graph using Chart.js
  */
@@ -109,12 +111,19 @@ class SwrGraph {
 
 	}
 
+	adjustData() {
+		let range = this.par.range;
+		let opts = this.data.options;
+		let ticks = opts.scales.xAxes[0].ticks;
+		ticks.min = range.start;
+		ticks.max = range.end;
+		opts.title.text = range.name;
+	}
+
 	startScan() {
 		let range = this.par.range;
 		//this 'ticks' code duplicated below intentionally
-		let ticks = this.data.options.scales.xAxes[0].ticks;
-		ticks.min = range.start;
-		ticks.max = range.end;
+		this.adjustData();
 		let ds = this.chart.data.datasets;
 		ds[0].data = [];
 		ds[1].data = [];
@@ -181,40 +190,23 @@ class SwrGraph {
 	setupEvents() {
 		let that = this;
 		let par = this.par;
-		let data = this.data;
-		let canvas = this.canvas;
-		let clicked = false;
-		this.canvas.addEventListener("click", (evt) => {
-			evt.preventDefault();
-			if (!clicked) {
-				clicked = true;
-				setTimeout(() => {
-					if (clicked) {
-						//single
-						let w = canvas.clientWidth;
-						let x = evt.clientX;
-						if (x < w / 2) {
-							par.prev();
-						} else {
-							par.next();
-						}
-						let range = par.range;
-						data.options.title.text = range.name;
-						let ticks = data.options.scales.xAxes[0].ticks;
-						ticks.min = range.start;
-						ticks.max = range.end;
-						that.redraw();
-					}
-					clicked = false;
-				}, 300);
-			} else {
-				//double
-				clicked = false;
-				par.checkConnectAndScan();
-			}
+		let hammer = new Hammer(this.canvas);
+		hammer.on("doubletap", (evt) => {
+			par.checkConnectAndScan();
 		});
-
+		hammer.on("swipeleft", (evt) => {
+			par.next();
+			that.adjustData();
+			that.redraw();
+		});
+		hammer.on("swiperight", (evt) => {
+			par.prev();
+			that.adjustData();
+			that.redraw();
+		});
 	}
+
+
 
 }
 
