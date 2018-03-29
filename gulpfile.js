@@ -5,6 +5,7 @@ const promisify = require("util").promisify;
 const del = require("del");
 const mkdirp = require("mkdirp");
 const webpack = require("webpack");
+const appIcon = require("app-icon");
 
 const p_copyFile = promisify(fs.copyFile);
 const p_mkdirp = promisify(mkdirp);
@@ -48,6 +49,10 @@ gulp.task("copyfiles", async () => {
 	await copy("bootstrap.min.js.map", BSJS, WWWJS);
 	await copy("jquery.min.js", JQUERY, WWWJS);
 	return copy("jquery.min.map", JQUERY, WWWJS);
+});
+
+gulp.task("icon", () => {
+
 });
 
 const webpackConfig = require("./webpack.config.js");
