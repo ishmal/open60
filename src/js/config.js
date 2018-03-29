@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import Rx from "rxjs/Rx";
 
 /**
@@ -59,7 +61,7 @@ const defaultConfig = {
 			name: "12 m",
 			start: 24700,
 			end: 25100,
-			step: 10
+			step: 20
 		},
 		{
 			name: "10 m",
@@ -71,26 +73,25 @@ const defaultConfig = {
 			name: "6 m",
 			start: 49800,
 			end: 54200,
-			step: 15
+			step: 100
 		},
 		{
 			name: "custom 1",
 			start: 1500,
 			end: 30000,
-			step: 200
+			step: 600
 		},
 		{
 			name: "custom 2",
 			start: 1500,
 			end: 30000,
-			step: 200
+			step: 600
 		}
 	]
 };
 
 class Config {
 	constructor() {
-    debugger;
 		this.config = JSON.parse(JSON.stringify(defaultConfig));
 		this.anchor = document.getElementById("config");
 		this.load();
@@ -160,9 +161,7 @@ class Config {
 			.map(e => e.target.value)
 			.subscribe(v => (c.deviceName = v));
 		let rows = document.querySelectorAll(".config-form tbody tr");
-		for (let i = 0, len = rows.length; i < len; i++) {
-			let row = rows[i];
-			let cols = row.querySelectorAll("input");
+		function setUpObservable(cols) {
 			Rx.Observable.fromEvent(cols[0], "input")
 				.map(e => e.target.value)
 				.subscribe(v => (ranges[i].name = parseInt(v)));
@@ -175,6 +174,11 @@ class Config {
 			Rx.Observable.fromEvent(cols[3], "input")
 				.map(e => e.target.value)
 				.subscribe(v => (ranges[i].step = parseInt(v)));
+		}
+		for (let i = 0, len = rows.length; i < len; i++) {
+			let row = rows[i];
+			let cols = row.querySelectorAll("input");
+			setUpObservable(cols);
 		}
 	}
 }

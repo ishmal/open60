@@ -1,10 +1,10 @@
 const gulp = require("gulp");
-const Bundler = require("parcel-bundler");
 const path = require("path");
 const fs = require("fs");
 const promisify = require("util").promisify;
 const del = require("del");
 const mkdirp = require("mkdirp");
+const webpack = require("webpack");
 
 const p_copyFile = promisify(fs.copyFile);
 const p_mkdirp = promisify(mkdirp);
@@ -39,7 +39,6 @@ gulp.task("copyfiles", async () => {
 	await p_mkdirp(WWWIMG);
 	await copy("index.html", SRC, WWW);
 	await copy("index.js", SRCJS, WWWJS);
-	//await copy("cordova.js", SRCJS, WWWJS);
 	await copy("index.css", SRCCSS, WWWCSS);
 	await copy("mini60.jpg", SRCIMG, WWWIMG);
 	await copy("icon.png", SRCIMG, WWWIMG);
@@ -51,26 +50,23 @@ gulp.task("copyfiles", async () => {
 	return copy("jquery.min.map", JQUERY, WWWJS);
 });
 
-gulp.task("parcel", () => {
-	let opts = {
-		outDir: WWWJS,
-		watch: false
-	};
-	let file = path.join(__dirname, "src", "js", "index.js");
-	let bundler = new Bundler(file, opts);
-	return bundler.bundle();
-});
+const webpackConfig = require("./webpack.config.js");
 
-gulp.task("build", gulp.series("clear", "copyfiles", "parcel"));
+gulp.task("webpack-build", (done) => {
+	let myConfig = Object.assign({}, webpackConfig);
 
-gulp.task("watch", () => {
-	let opts = {
-		outDir: WWWJS,
-		watch: true
-	};
-	let file = path.join(__dirname, "src", "js", "index.js");
-	let bundler = new Bundler(file, opts);
-	return bundler.bundle();
-});
+	webpack(myConfig, (err, stats) => {
+		if (err) {
+			console.log(err);
+			process.exit(-1);
+		} else {
+			console.log(stats.toString({}));
+		}
+		//console.log(stats);
+		done();
+	});
+})
+
+gulp.task("build", gulp.series("clear", "copyfiles", "webpack-build"));
 
 gulp.task("default", gulp.series("build"));

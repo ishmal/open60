@@ -21,10 +21,13 @@
     "web": "0.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.42",
+    "@babel/preset-env": "^7.0.0-beta.42",
+    "babel-loader": "^8.0.0-beta.2",
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "mkdirp": "^0.5.1",
-    "parcel-bundler": "^1.6.2"
+    "webpack": "^4.3.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

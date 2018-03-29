@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/* jshint esversion: 6 */
 
 import App from "./app";
 

@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 import Chart from "chart.js";
 
 /**
@@ -98,14 +100,15 @@ class SwrGraph {
 	}
 
 	startScan() {
+		let range = this.par.range;
 		let ds = this.chart.data.datasets;
 		ds[0].data = [];
 		ds[1].data = [];
 		this.annots.length = 0;
 		this.minSwr = 999;
-		this.minSwrFreq = this.par.range.start;
+		this.minSwrFreq = range.start;
 		this.minR = Number.MAX_VALUE;
-		this.minRFreq = par.range.start;
+		this.minRFreq = range.start;
 		this.redraw();
 	}
 
@@ -128,10 +131,10 @@ class SwrGraph {
 	}
 
 	update(datapoint) {
-		let par = this.par;
+		let range = this.par.range;
 		let ds = this.chart.data.datasets;
 		let len = ds[0].data.length;
-		let freq = par.range.start + len * (par.range.step);
+		let freq = range.start + len * range.step;
 		let swr = datapoint.swr;
 		if (swr < this.minSwr) {
 			this.minSwr = swr;
@@ -172,10 +175,11 @@ class SwrGraph {
 						} else {
 							par.next();
 						}
-						data.options.title.text = par.range.name;
+						let range = par.range;
+						data.options.title.text = range.name;
 						let ticks = data.options.scales.xAxes[0].ticks;
-						ticks.min = par.range.start;
-						ticks.max = par.range.end;
+						ticks.min = range.start;
+						ticks.max = range.end;
 						that.redraw();
 					}
 					clicked = false;

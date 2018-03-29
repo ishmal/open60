@@ -1,6 +1,11 @@
+/* jshint esversion: 6 */
+
 import SwrGraph from "./swrgraph";
 import Config from "./config";
 import '@babel/polyfill';
+import { btIsConnected, btList, btConnect, btDisconnect, 
+	btSubscribe, btUnsubscribe, btWrite } from "./bt";
+
 
 //#######################################################
 //# MESSAGES
@@ -24,79 +29,6 @@ function error(msg) {
 	}
 }
 
-//#######################################################
-//# Promisify bluetoothSerial functions
-//#######################################################
-
-function btIsConnected() {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btIsConnected: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.isConnected(resolve, reject);
-		}
-	});
-}
-
-function btList() {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btList: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.list(resolve, reject);
-		}
-	});
-}
-
-function btConnect(address) {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btConnect: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.write(address, resolve, reject);
-		}
-	});
-}
-
-function btDisconnect() {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btDisconnect: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.disconnect(resolve, reject);
-		}
-	});
-}
-
-function btSubscribe(receiveCb) {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btSubscribe: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.subscribe("\n", receiveCb, reject);
-		}
-	});
-}
-
-function btUnsubscribe(receiveCb) {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btUnsubscribe: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.unsubscribe(resolve, reject);
-		}
-	});
-}
-
-function btWrite(msg) {
-	return new Promise((resolve, reject) => {
-		if (typeof bluetoothSerial === "undefined") {
-			reject("btWrite: bluetoothSerial not found");
-		} else {
-			bluetoothSerial.write(msg + "\r\n", resolve, reject);
-		}
-	});
-}
 
 //#######################################################
 //# M A I N
@@ -134,27 +66,29 @@ class App {
 		this.range = ranges[this.rangeIndex];
 	}
 
-	async connect(device) {
+	connect(device) {
 		
-		try {
-			await btConnect(device.address);
-			await btSubscribe("\n", (data) => this.receive(data));
-		} catch(e) {
+		return btConnect(device.address)
+		.then(() => {
+			return btSubscribe((dat) => this.receive(dat));
+		})
+		.catch((e) => {
 			error("connect failure with '" + device.name + "' : " + e);
-		}
+		});
 
 	}
 
-	async disconnect() {
+	disconnect() {
 		if (!this.connected) {
 			return;
 		}
-		try {
-			await btUnsubscribe();
-			await btDisconnect();
-		} catch(e) {
+		return btUnsubscribe()
+		.then(() => {
+			return btDisconnect();
+		})
+		.catch((e) => {
 			error("unsubscribe: " + e);
-		}
+		});
 	}
 
 	receive(data) {
@@ -178,16 +112,17 @@ class App {
 		}
 	}
 
-	async send(msg) {
+	send(msg) {
 		if (!msg) {
 			return;
 		}
-		try {
-			await btWrite(msg + "\r\n");
+		return btWrite(msg + "\r\n")
+		.then(() => {
 			//trace("sent!");
-		} catch(e) {
+		})
+		.catch((e) => {
 			error("send: " + e);
-		}
+		});
 	}
 
 	findDevice(devices) {
@@ -203,16 +138,15 @@ class App {
 		return dev;
 	}
 
-	async findDeviceAndConnect() {
-		try {
-			let devices = await btList();
+	findDeviceAndConnect() {
+		return btList()
+		.then((devices) => {
 			let dev = this.findDevice(devices);
-			if (dev) {
-				await this.connect(dev);
-			}
-		} catch (e) {
+			return this.connect(dev);
+		})
+		.catch((e) => {
 			error("findDeviceAndConnect: cannot list paired devices: " + e);
-		}
+		});
 	}
 
 	scan() {
@@ -221,30 +155,38 @@ class App {
 		let end = r.end * 1000;
 		let step = r.step * 1000;
 		let cmd = "scan " + start + " " + end + " " + step;
-		this.send(cmd);
+		trace("cmd: " + cmd);
+		return this.send(cmd);
 	}
 
-	async checkConnectAndScan() {
+	checkConnectAndScan() {
 		if (this.connected) {
 			return this.scan();
 		}
-		try {
-			await this.findDeviceAndConnect();
-			this.scan();
-		} catch (e) {
+		return this.findDeviceAndConnect()
+		.then(() => {
+			return this.scan();
+		})
+		.catch((e) => {
 			error("checkConnectAndScan: " + e);
-		}
+		});
+	}
+
+	heartbeat() {
+		//success = yes, failure = no
+		return btIsConnected()
+		.then(() => {
+			this.connected = true;
+			this.graph.redraw();
+		})
+		.catch(() => {
+			this.connected = false;   
+			this.graph.redraw();
+		});
 	}
 
 	startHeartbeat() {
-		this.timer = setInterval(async () => {
-			try {
-				this.connected = await btIsConnected();
-				this.graph.redraw();
-			} catch (e) {
-				//error("heartbeat: " + e);  //this message is annoying
-			}
-		}, 4000);
+		this.timer = setInterval(this.heartbeat.bind(this), 4000);
 	}
 
 	stopHeartbeat() {
