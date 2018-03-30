@@ -92,12 +92,12 @@ class Config {
 	}
 
 	load() {
-		let cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
-		if (!cfg || cfg.id !== "Open60Config") {
-			this.restore();
-		} else {
+		try {
+			let cfg = JSON.parse(window.localStorage.getItem("open60") || "{}");
 			this.config = cfg;
 			this.render();
+		} catch(e) {
+			this.restore();
 		}
 	}
 
@@ -138,6 +138,14 @@ class Config {
 		`;
 		this.anchor.innerHTML = html;
 
+		function getInt(s) {
+			try {
+				return Math.round(parseFloat(s));
+			} catch(e) {
+				return 0;
+			}
+		}
+
 		let saveBtn = document.getElementById("config-save");
 		saveBtn.addEventListener("click", () => this.save());
 		let restoreBtn = document.getElementById("config-restore");
@@ -156,12 +164,12 @@ class Config {
 			Rx.Observable.fromEvent(cols[1], "input")
 				.map(e => e.target.value)
 				.subscribe(v => {
-					r.start = parseInt(v);
+					r.start = getInt(v);
 				});
 			Rx.Observable.fromEvent(cols[2], "input")
 				.map(e => e.target.value)
 				.subscribe(v => {
-					r.end = parseInt(v);
+					r.end = getInt(v);
 				});
 		}
 		for (let i = 0, len = rows.length; i < len; i++) {

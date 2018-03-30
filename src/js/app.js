@@ -6,7 +6,7 @@ import '@babel/polyfill';
 import { btIsConnected, btList, btConnect, btDisconnect, 
 	btSubscribe, btUnsubscribe, btWrite } from "./bt";
 
-const isBrowser = false;
+const isBrowser = true;
 
 //#######################################################
 //# MESSAGES

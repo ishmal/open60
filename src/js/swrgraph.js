@@ -36,18 +36,20 @@ class SwrGraph {
 					xAxisID: "X",
 					yAxisID: "A",
 					fill: false,
-					borderWidth: 6,
-					borderColor: "rgba(75,255,0,0.6)",
-					backgroundColor: "rgba(75,255,0,0.6)"
+					borderWidth: 4,
+					borderColor: "rgba(0,255,0,0.7)",
+					backgroundColor: "rgba(75,255,0,0.6)",
+					pointRadius: 1
 			}, {
 					label: "impedance",
 					data: [],
 					xAxisID: "X",
 					yAxisID: "B",
 					fill: false,
-					borderWidth: 6,
-					borderColor: "rgba(255,75,0,0.6)",
-					backgroundColor: "rgba(255,75,0,0.6)"
+					borderWidth: 4,
+					borderColor: "rgba(255,0,0,0.7)",
+					backgroundColor: "rgba(255,75,0,0.6)",
+					pointRadius: 1
 				}]
 			},
 			options: {
